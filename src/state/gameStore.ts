@@ -214,15 +214,29 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'hide_reveal':
       if (state.reveal?.selectedCards) {
         const shouldPenalize = Boolean(state.buzz && !state.reveal.isCorrect && !state.reveal.isDuplicate)
+        const newScores = shouldPenalize
+          ? { ...state.scores, [state.buzz!.team]: state.scores[state.buzz!.team] - 1 }
+          : state.scores
+
+        const allTrios = findAllValidTrios(state.cards)
+        const allFound = allTrios.length > 0 && state.foundTrioKeys.length >= allTrios.length
+
+        if (allFound) {
+          return {
+            ...state,
+            round: state.round + 1,
+            cards: getNewRound(),
+            scores: newScores,
+            buzz: null,
+            reveal: null,
+            selectedPositions: [],
+            foundTrioKeys: [],
+          }
+        }
 
         return {
           ...state,
-          scores: shouldPenalize
-            ? {
-                ...state.scores,
-                [state.buzz!.team]: state.scores[state.buzz!.team] - 1,
-              }
-            : state.scores,
+          scores: newScores,
           buzz: null,
           reveal: null,
           selectedPositions: [],
