@@ -117,8 +117,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       }
 
     case 'reveal_no_combo': {
-      const trios = findAllValidTrios(state.cards)
-      const isCorrect = trios.length === 0
+      const allTrios = findAllValidTrios(state.cards)
+      const remainingTrios = allTrios.filter(
+        trio => !state.foundTrioKeys.includes(getTrioKey(trio))
+      )
+      const isCorrect = remainingTrios.length === 0
       const buzzTeam = state.buzz?.team
       return {
         ...state,
@@ -127,34 +130,43 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           : state.scores,
         reveal: {
           mode: 'noCombo',
-          trios,
+          trios: remainingTrios,
           isCorrect,
         },
       }
     }
 
     case 'hint': {
-      const trios = findAllValidTrios(state.cards)
+      const allTrios = findAllValidTrios(state.cards)
+      const remainingTrios = allTrios.filter(
+        trio => !state.foundTrioKeys.includes(getTrioKey(trio))
+      )
       return {
         ...state,
-        reveal: { mode: 'hint', trios },
+        reveal: { mode: 'hint', trios: remainingTrios },
       }
     }
 
     case 'hint_cards': {
-      const trios = findAllValidTrios(state.cards)
+      const allTrios = findAllValidTrios(state.cards)
+      const remainingTrios = allTrios.filter(
+        trio => !state.foundTrioKeys.includes(getTrioKey(trio))
+      )
       return {
         ...state,
-        reveal: { mode: 'hintCards', trios },
+        reveal: { mode: 'hintCards', trios: remainingTrios },
       }
     }
 
     case 'timeout_reveal': {
       if (state.reveal) return state
-      const trios = findAllValidTrios(state.cards)
+      const allTrios = findAllValidTrios(state.cards)
+      const remainingTrios = allTrios.filter(
+        trio => !state.foundTrioKeys.includes(getTrioKey(trio))
+      )
       return {
         ...state,
-        reveal: { mode: 'timeout', trios },
+        reveal: { mode: 'timeout', trios: remainingTrios },
       }
     }
 
