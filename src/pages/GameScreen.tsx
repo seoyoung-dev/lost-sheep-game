@@ -2,6 +2,7 @@ import { useReducer, useEffect } from 'react'
 import Board from '../components/Board'
 import BellPanel from '../components/BellPanel'
 import HostPanel from '../components/HostPanel'
+import FoundTriosPanel from '../components/FoundTriosPanel'
 import ResultOverlay from '../components/ResultOverlay'
 import useBuzzerKeys from '../hooks/useBuzzerKeys'
 import {
@@ -89,9 +90,10 @@ export default function GameScreen() {
             />
           </div>
 
-          <div style={{ display: 'grid', gap: '14px' }}>
+          <div style={{ display: 'grid', gap: '14px', alignContent: 'start', overflowY: 'auto', maxHeight: 'calc(100vh - 92px)' }}>
             <BellPanel scores={state.scores} buzz={state.buzz} />
             <HostPanel dispatch={dispatch} />
+            <FoundTriosPanel foundTrios={state.foundTrios} cards={state.cards} />
           </div>
         </div>
       </div>

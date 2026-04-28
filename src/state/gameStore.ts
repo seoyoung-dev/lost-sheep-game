@@ -28,6 +28,7 @@ export interface GameState {
   reveal: RevealState
   selectedPositions: number[]
   foundTrioKeys: string[]
+  foundTrios: SheepCard[][]
 }
 
 export type GameAction =
@@ -66,6 +67,7 @@ export function createInitialGameState(): GameState {
     reveal: null,
     selectedPositions: [],
     foundTrioKeys: [],
+    foundTrios: [],
   }
 }
 
@@ -80,6 +82,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         reveal: null,
         selectedPositions: [],
         foundTrioKeys: [],
+        foundTrios: [],
       }
 
     case 'buzz':
@@ -201,6 +204,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             }
           : state.scores,
         foundTrioKeys: correct && !isDuplicate ? [...state.foundTrioKeys, trioKey] : state.foundTrioKeys,
+        foundTrios: correct && !isDuplicate ? [...state.foundTrios, selectedCards] : state.foundTrios,
         reveal: {
           mode: 'trio',
           trios: correct ? [selectedCards] : [],
@@ -245,6 +249,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           reveal: null,
           selectedPositions: [],
           foundTrioKeys: [],
+          foundTrios: [],
         }
       }
 
