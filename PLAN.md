@@ -146,7 +146,7 @@ combination-game/
 
 ---
 
-### ⬜ Phase 1C — 카드 합성 27장 시안 (다음 작업)
+### ✅ Phase 1C — 카드 합성 27장 시안 (완료)
 
 다음으로 `src/components/Card.tsx`를 만들어야 함.
 
@@ -172,7 +172,7 @@ combination-game/
 
 ---
 
-### ⬜ Phase 2 — 게임 데이터·로직 (미시작)
+### ✅ Phase 2 — 게임 데이터·로직 (완료)
 
 만들어야 할 파일:
 
@@ -203,7 +203,7 @@ function isValidTrio(a, b, c): boolean {
 
 ---
 
-### ⬜ Phase 3 — 게임 화면·입력·사회자 패널 (미시작)
+### ✅ Phase 3 — 게임 화면·입력·사회자 패널 (완료)
 
 만들어야 할 파일:
 
@@ -245,7 +245,7 @@ type GameState = {
 
 ---
 
-### ⬜ Phase 4 — 통합·시연·빌드 (미시작)
+### 🔄 Phase 4 — 통합·시연·빌드 (진행 중)
 
 - 임시 디자인 페이지(`DesignSheep`, `DesignBackground`, `DesignAll`) 정리 또는 dev 전용 토글
 - 1080p/4K 풀스크린 가독성 확인 (카드·폰트 크기 조정)
@@ -262,11 +262,10 @@ npm run dev
 ```
 
 **다음 할 일 (순서대로):**
-1. `src/components/Card.tsx` 작성
-2. `src/pages/DesignAll.tsx` 작성
-3. 배경 + 양 이미지 + 카드 번호를 합성한 27장 전체 카드 시안 확인
-4. 카드 디자인 최종 승인
-5. 디자인 승인 후 Phase 2~4 구현
+1. `npm run build` 통과 여부 확인
+2. 풀스크린(1080p/4K)에서 카드·점수 가독성 점검 및 크기 조정
+3. 임시 디자인 페이지(`DesignSheep`, `DesignBackground`, `DesignAll`) 정리
+4. 실제 게임 5라운드 시연으로 A/L 벨·카드 선택·정답 판정·점수 흐름 최종 확인
 
 ---
 

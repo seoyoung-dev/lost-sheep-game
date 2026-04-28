@@ -110,14 +110,22 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         },
       }
 
-    case 'reveal_no_combo':
+    case 'reveal_no_combo': {
+      const trios = findAllValidTrios(state.cards)
+      const isCorrect = trios.length === 0
+      const buzzTeam = state.buzz?.team
       return {
         ...state,
+        scores: buzzTeam
+          ? { ...state.scores, [buzzTeam]: state.scores[buzzTeam] + (isCorrect ? 2 : -2) }
+          : state.scores,
         reveal: {
           mode: 'noCombo',
-          trios: findAllValidTrios(state.cards),
+          trios,
+          isCorrect,
         },
       }
+    }
 
     case 'select_position':
       if (!state.buzz) {
@@ -203,10 +211,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         }
       }
 
-      return {
-        ...state,
-        reveal: null,
+      if (state.reveal?.mode === 'noCombo') {
+        return { ...state, buzz: null, reveal: null, selectedPositions: [] }
       }
+
+      return { ...state, reveal: null }
 
     case 'adjust_score':
       return {
