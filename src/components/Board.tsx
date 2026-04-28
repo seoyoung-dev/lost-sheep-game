@@ -22,14 +22,19 @@ export default function Board({
         gap: '14px',
       }}
     >
-      {cards.map((card, index) => (
-        <Card
-          key={card.id}
-          card={card}
-          number={index + 1}
-          highlighted={highlightedIds.has(card.id) || selectedPositions.includes(index + 1)}
-        />
-      ))}
+      {cards.map((card, index) => {
+        const position = index + 1
+        const selectionOrder = selectedPositions.indexOf(position)
+        return (
+          <Card
+            key={card.id}
+            card={card}
+            number={position}
+            highlighted={highlightedIds.has(card.id)}
+            selectedIndex={selectionOrder >= 0 ? selectionOrder + 1 : undefined}
+          />
+        )
+      })}
     </div>
   )
 }
