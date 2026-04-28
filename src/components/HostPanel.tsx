@@ -96,7 +96,8 @@ export default function HostPanel({ dispatch }: HostPanelProps) {
         <ActionButton label="벨 리셋" onClick={() => dispatch({ type: 'buzz_reset' })} />
         <ActionButton label="정답 공개" onClick={() => dispatch({ type: 'reveal_trios' })} />
         <ActionButton label="조합 없음 처리" onClick={() => dispatch({ type: 'reveal_no_combo' })} />
-        <ActionButton label="힌트" onClick={() => dispatch({ type: 'hint' })} />
+        <ActionButton label="개수 힌트" onClick={() => dispatch({ type: 'hint' })} />
+        <ActionButton label="카드 힌트" onClick={() => dispatch({ type: 'hint_cards' })} />
       </div>
 
       <div style={{ display: 'grid', gap: '12px' }}>

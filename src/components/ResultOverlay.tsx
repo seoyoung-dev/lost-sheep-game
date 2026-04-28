@@ -172,11 +172,74 @@ function HintOverlay({ reveal, onClose }: { reveal: NonNullable<RevealState>; on
   )
 }
 
+function HintCardsOverlay({ reveal, onClose }: { reveal: NonNullable<RevealState>; onClose: () => void }) {
+  const count = reveal.trios.length
+  const noTriosLeft = count === 0
+
+  if (noTriosLeft) {
+    return <HintOverlay reveal={reveal} onClose={onClose} />
+  }
+
+  const cardCount = new Set(reveal.trios.flat().map(c => c.id)).size
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'absolute',
+        inset: 0,
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        paddingBottom: '24px',
+        zIndex: 20,
+        cursor: 'pointer',
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '14px',
+          background: 'rgba(15, 23, 42, 0.82)',
+          borderRadius: '999px',
+          padding: '14px 24px',
+          boxShadow: '0 8px 32px rgba(15, 23, 42, 0.35)',
+          cursor: 'default',
+        }}
+      >
+        <span style={{ fontSize: '1.4rem' }}>✨</span>
+        <span style={{ color: '#fff', fontWeight: 800, fontSize: '1rem' }}>
+          조합에 포함된 카드 {cardCount}장이 강조됩니다
+        </span>
+        <button
+          onClick={onClose}
+          style={{
+            padding: '8px 20px',
+            background: '#FACC15',
+            color: '#1E293B',
+            borderRadius: '999px',
+            fontWeight: 800,
+            fontSize: '0.9rem',
+          }}
+        >
+          닫기 (Enter)
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function ResultOverlay({ reveal, cards, onClose }: ResultOverlayProps) {
   if (!reveal) return null
 
   if (reveal.mode === 'hint') {
     return <HintOverlay reveal={reveal} onClose={onClose} />
+  }
+
+  if (reveal.mode === 'hintCards') {
+    return <HintCardsOverlay reveal={reveal} onClose={onClose} />
   }
 
   const verdict = getVerdictConfig(reveal)

@@ -21,7 +21,7 @@ export default function GameScreen() {
   useEffect(() => {
     if (!state.reveal) return
     const { mode, isCorrect, isDuplicate } = state.reveal
-    if (mode === 'hint') {
+    if (mode === 'hint' || mode === 'hintCards') {
       playHint()
       return
     }
