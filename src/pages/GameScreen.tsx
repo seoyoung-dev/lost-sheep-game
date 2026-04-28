@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { useReducer, useEffect } from 'react'
 import Board from '../components/Board'
 import BellPanel from '../components/BellPanel'
 import HostPanel from '../components/HostPanel'
@@ -9,9 +9,29 @@ import {
   gameReducer,
   getHighlightedCardIds,
 } from '../state/gameStore'
+import { playBuzz, playCorrect, playWrong, playHint } from '../utils/sounds'
 
 export default function GameScreen() {
   const [state, dispatch] = useReducer(gameReducer, undefined, createInitialGameState)
+
+  useEffect(() => {
+    if (state.buzz) playBuzz()
+  }, [state.buzz])
+
+  useEffect(() => {
+    if (!state.reveal) return
+    const { mode, isCorrect, isDuplicate } = state.reveal
+    if (mode === 'hint') {
+      playHint()
+      return
+    }
+    if (isCorrect && !isDuplicate) {
+      playCorrect()
+    } else if (!isCorrect || isDuplicate) {
+      playWrong()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.reveal])
 
   useBuzzerKeys({ dispatch, hasRevealOpen: Boolean(state.reveal) })
 
