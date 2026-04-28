@@ -32,8 +32,8 @@ export default function Card({
     boxShadow = '0 0 0 4px #3B82F6, 0 20px 48px rgba(59, 130, 246, 0.55)'
     transform = 'scale(1.04)'
   } else if (highlighted) {
-    border = '6px solid #FACC15'
-    boxShadow = '0 0 0 5px #F59E0B, 0 0 24px rgba(250, 204, 21, 0.9), 0 20px 40px rgba(250, 204, 21, 0.5)'
+    border = '6px solid #39FF14'
+    boxShadow = '0 0 0 5px #22c55e, 0 0 24px rgba(57, 255, 20, 0.9), 0 20px 40px rgba(57, 255, 20, 0.5)'
     transform = 'scale(1.04)'
   } else {
     border = '3px solid rgba(255,255,255,0.96)'
@@ -120,7 +120,7 @@ export default function Card({
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'rgba(250, 204, 21, 0.22)',
+            background: 'rgba(57, 255, 20, 0.18)',
             zIndex: 1,
             pointerEvents: 'none',
           }}
