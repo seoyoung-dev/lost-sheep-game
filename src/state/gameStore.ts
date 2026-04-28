@@ -11,6 +11,7 @@ export type RevealState =
       trios: SheepCard[][]
       selectedCards?: SheepCard[]
       isCorrect?: boolean
+      isDuplicate?: boolean
     }
 
 export type BuzzState =
@@ -26,6 +27,7 @@ export interface GameState {
   buzz: BuzzState
   reveal: RevealState
   selectedPositions: number[]
+  foundTrioKeys: string[]
 }
 
 export type GameAction =
@@ -46,6 +48,13 @@ function getNewRound() {
   return dealRound(ROUND_SIZE)
 }
 
+function getTrioKey(cards: SheepCard[]) {
+  return cards
+    .map(card => card.id)
+    .sort((a, b) => a - b)
+    .join('-')
+}
+
 export function createInitialGameState(): GameState {
   return {
     round: 1,
@@ -54,6 +63,7 @@ export function createInitialGameState(): GameState {
     buzz: null,
     reveal: null,
     selectedPositions: [],
+    foundTrioKeys: [],
   }
 }
 
@@ -67,6 +77,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         buzz: null,
         reveal: null,
         selectedPositions: [],
+        foundTrioKeys: [],
       }
 
     case 'buzz':
@@ -152,20 +163,24 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
       const selectedCards = state.selectedPositions.map(position => state.cards[position - 1])
       const correct = isValidTrio(selectedCards[0], selectedCards[1], selectedCards[2])
+      const trioKey = getTrioKey(selectedCards)
+      const isDuplicate = correct && state.foundTrioKeys.includes(trioKey)
 
       return {
         ...state,
-        scores: correct
+        scores: correct && !isDuplicate
           ? {
               ...state.scores,
               [state.buzz.team]: state.scores[state.buzz.team] + 1,
             }
           : state.scores,
+        foundTrioKeys: correct && !isDuplicate ? [...state.foundTrioKeys, trioKey] : state.foundTrioKeys,
         reveal: {
           mode: 'trio',
           trios: correct ? [selectedCards] : [],
           selectedCards,
-          isCorrect: correct,
+          isCorrect: correct && !isDuplicate,
+          isDuplicate,
         },
       }
     }

@@ -23,11 +23,24 @@ export default function ResultOverlay({ reveal, cards, onClose }: ResultOverlayP
 
   const hasTrios = reveal.trios.length > 0
   const hasSelectedCards = Boolean(reveal.selectedCards?.length)
-  const verdictLabel = hasSelectedCards ? (reveal.isCorrect ? '정답' : '실패') : null
-  const verdictColor = reveal.isCorrect ? '#BE123C' : '#1E293B'
-  const verdictGlow = reveal.isCorrect
-    ? '0 12px 36px rgba(244, 63, 94, 0.22)'
-    : '0 12px 36px rgba(30, 41, 59, 0.2)'
+  const verdictLabel = hasSelectedCards
+    ? reveal.isDuplicate
+      ? '이미 나온 정답'
+      : reveal.isCorrect
+        ? '정답'
+        : '실패'
+    : null
+  const verdictColor = reveal.isDuplicate ? '#7C3AED' : reveal.isCorrect ? '#BE123C' : '#1E293B'
+  const verdictGlow = reveal.isDuplicate
+    ? '0 12px 36px rgba(124, 58, 237, 0.2)'
+    : reveal.isCorrect
+      ? '0 12px 36px rgba(244, 63, 94, 0.22)'
+      : '0 12px 36px rgba(30, 41, 59, 0.2)'
+  const verdictBackground = reveal.isDuplicate
+    ? 'rgba(245, 243, 255, 0.94)'
+    : reveal.isCorrect
+      ? 'rgba(255, 228, 230, 0.9)'
+      : 'rgba(226, 232, 240, 0.9)'
 
   return (
     <div
@@ -60,7 +73,7 @@ export default function ResultOverlay({ reveal, cards, onClose }: ResultOverlayP
               marginBottom: '18px',
               padding: '24px 16px 18px',
               borderRadius: '24px',
-              background: reveal.isCorrect ? 'rgba(255, 228, 230, 0.9)' : 'rgba(226, 232, 240, 0.9)',
+              background: verdictBackground,
               boxShadow: verdictGlow,
             }}
           >
@@ -83,7 +96,9 @@ export default function ResultOverlay({ reveal, cards, onClose }: ResultOverlayP
         </div>
         <div style={{ fontSize: '0.95rem', color: '#64748B', lineHeight: 1.6, marginBottom: '18px' }}>
           {hasSelectedCards
-            ? reveal.isCorrect
+            ? reveal.isDuplicate
+              ? `이 조합은 이미 다른 팀이 먼저 맞혔습니다. 선택 카드: ${formatCardPositions(cards, reveal.selectedCards!)}`
+              : reveal.isCorrect
               ? `선택한 조합이 정답입니다. 선택 카드: ${formatCardPositions(cards, reveal.selectedCards!)}`
               : `선택한 조합은 정답이 아닙니다. 선택 카드: ${formatCardPositions(cards, reveal.selectedCards!)}`
             : reveal.mode === 'trio'
