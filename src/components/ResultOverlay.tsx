@@ -172,6 +172,106 @@ function HintOverlay({ reveal, onClose }: { reveal: NonNullable<RevealState>; on
   )
 }
 
+function TimeoutOverlay({ reveal, cards, onClose }: { reveal: NonNullable<RevealState>; cards: SheepCard[]; onClose: () => void }) {
+  const hasTrios = reveal.trios.length > 0
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'absolute',
+        inset: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '28px',
+        background: 'rgba(15, 23, 42, 0.60)',
+        zIndex: 20,
+        cursor: 'pointer',
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          width: 'min(720px, 100%)',
+          maxHeight: '80vh',
+          overflow: 'auto',
+          borderRadius: '28px',
+          background: 'rgba(255,255,255,0.97)',
+          padding: '28px 24px 24px',
+          boxShadow: '0 30px 80px rgba(15, 23, 42, 0.32)',
+          textAlign: 'center',
+          cursor: 'default',
+        }}
+      >
+        {/* 배너 */}
+        <div
+          style={{
+            marginBottom: '20px',
+            padding: '24px 16px 18px',
+            borderRadius: '20px',
+            background: 'rgba(254, 243, 199, 0.9)',
+            boxShadow: '0 8px 28px rgba(217, 119, 6, 0.18)',
+          }}
+        >
+          <div style={{ fontSize: '2.8rem', marginBottom: '8px' }}>⏰</div>
+          <div
+            style={{
+              fontSize: 'clamp(2rem, 7vw, 3rem)',
+              fontWeight: 900,
+              color: '#B45309',
+              lineHeight: 1.1,
+            }}
+          >
+            시간 초과
+          </div>
+        </div>
+
+        <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#334155', marginBottom: '8px' }}>
+          {hasTrios ? `남은 조합 ${reveal.trios.length}개` : '남은 조합 없음'}
+        </div>
+        <div style={{ fontSize: '0.9rem', color: '#64748B', marginBottom: '16px' }}>
+          {hasTrios ? '이번 라운드에 찾지 못한 조합입니다.' : '이번 라운드에 모든 조합을 찾았거나 원래 조합이 없었습니다.'}
+        </div>
+
+        {hasTrios && (
+          <div style={{ display: 'grid', gap: '8px', marginBottom: '18px' }}>
+            {reveal.trios.map((trio, index) => (
+              <div
+                key={index}
+                style={{
+                  borderRadius: '14px',
+                  background: 'rgba(248,250,252,0.96)',
+                  padding: '11px 14px',
+                  color: '#334155',
+                  fontWeight: 700,
+                }}
+              >
+                조합 {index + 1}: {formatCardPositions(cards, trio)}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <button
+          onClick={onClose}
+          style={{
+            width: '100%',
+            padding: '14px 16px',
+            background: '#B45309',
+            color: '#fff',
+            borderRadius: '16px',
+            fontWeight: 800,
+            fontSize: '1rem',
+          }}
+        >
+          다음 라운드 (Enter)
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function HintCardsOverlay({ reveal, onClose }: { reveal: NonNullable<RevealState>; onClose: () => void }) {
   const count = reveal.trios.length
   const noTriosLeft = count === 0
@@ -240,6 +340,10 @@ export default function ResultOverlay({ reveal, cards, onClose }: ResultOverlayP
 
   if (reveal.mode === 'hintCards') {
     return <HintCardsOverlay reveal={reveal} onClose={onClose} />
+  }
+
+  if (reveal.mode === 'timeout') {
+    return <TimeoutOverlay reveal={reveal} cards={cards} onClose={onClose} />
   }
 
   const verdict = getVerdictConfig(reveal)

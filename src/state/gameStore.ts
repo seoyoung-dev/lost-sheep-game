@@ -7,7 +7,7 @@ export type Team = 'team1' | 'team2'
 export type RevealState =
   | null
   | {
-      mode: 'trio' | 'noCombo' | 'hint' | 'hintCards'
+      mode: 'trio' | 'noCombo' | 'hint' | 'hintCards' | 'timeout'
       trios: SheepCard[][]
       selectedCards?: SheepCard[]
       isCorrect?: boolean
@@ -39,6 +39,7 @@ export type GameAction =
   | { type: 'reveal_no_combo' }
   | { type: 'hint' }
   | { type: 'hint_cards' }
+  | { type: 'timeout_reveal' }
   | { type: 'select_position'; position: number }
   | { type: 'remove_last_selection' }
   | { type: 'submit_selection' }
@@ -148,6 +149,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       }
     }
 
+    case 'timeout_reveal': {
+      if (state.reveal) return state
+      const trios = findAllValidTrios(state.cards)
+      return {
+        ...state,
+        reveal: { mode: 'timeout', trios },
+      }
+    }
+
     case 'select_position':
       if (!state.buzz) {
         return state
@@ -235,6 +245,19 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
       if (state.reveal?.mode === 'noCombo') {
         return { ...state, buzz: null, reveal: null, selectedPositions: [] }
+      }
+
+      if (state.reveal?.mode === 'timeout') {
+        return {
+          ...state,
+          round: state.round + 1,
+          cards: getNewRound(),
+          buzz: null,
+          reveal: null,
+          selectedPositions: [],
+          foundTrioKeys: [],
+          foundTrios: [],
+        }
       }
 
       if (

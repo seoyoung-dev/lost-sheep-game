@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from 'react'
+import { useReducer, useEffect, useState, useRef } from 'react'
 import Board from '../components/Board'
 import BellPanel from '../components/BellPanel'
 import HostPanel from '../components/HostPanel'
@@ -12,8 +12,46 @@ import {
 } from '../state/gameStore'
 import { playBuzz, playCorrect, playWrong, playHint } from '../utils/sounds'
 
+const TIMEOUT_SECONDS = 5 * 60
+
+function formatTime(seconds: number) {
+  const m = Math.floor(seconds / 60)
+  const s = seconds % 60
+  return `${m}:${s.toString().padStart(2, '0')}`
+}
+
 export default function GameScreen() {
   const [state, dispatch] = useReducer(gameReducer, undefined, createInitialGameState)
+  const [timeLeft, setTimeLeft] = useState(TIMEOUT_SECONDS)
+  const [timedOut, setTimedOut] = useState(false)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  // 라운드 시작 또는 정답 발생 시 타이머 리셋
+  const timerResetKey = `${state.round}-${state.foundTrios.length}`
+  useEffect(() => {
+    setTimeLeft(TIMEOUT_SECONDS)
+    setTimedOut(false)
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    intervalRef.current = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(intervalRef.current!)
+          setTimedOut(true)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timerResetKey])
+
+  // 시간 초과 시 오버레이 표시 (현재 reveal 없을 때 발동)
+  useEffect(() => {
+    if (timedOut && !state.reveal) {
+      dispatch({ type: 'timeout_reveal' })
+    }
+  }, [timedOut, state.reveal])
 
   useEffect(() => {
     if (state.buzz) playBuzz()
@@ -48,12 +86,27 @@ export default function GameScreen() {
       }}
     >
       <div style={{ maxWidth: '1520px', margin: '0 auto' }}>
-        <div style={{ marginBottom: '12px', textAlign: 'center' }}>
-          <div style={{ color: '#9D174D', fontWeight: 900, fontSize: '1.75rem', marginBottom: '4px' }}>
-            잃은 양 찾기
+        <div style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ textAlign: 'center', flex: 1 }}>
+            <div style={{ color: '#9D174D', fontWeight: 900, fontSize: '1.75rem', marginBottom: '4px' }}>
+              잃은 양 찾기
+            </div>
+            <div style={{ color: '#64748B', fontSize: '0.95rem' }}>
+              Round {state.round} · A / L 벨 · 숫자 1~9 선택 · Enter 제출 · Esc 리셋 · Space 다음 라운드
+            </div>
           </div>
-          <div style={{ color: '#64748B', fontSize: '0.95rem' }}>
-            Round {state.round} · A / L 벨 · 숫자 1~9 선택 · Enter 제출 · Esc 리셋 · Space 다음 라운드
+          <div
+            style={{
+              minWidth: '80px',
+              textAlign: 'center',
+              fontSize: '1.6rem',
+              fontWeight: 900,
+              letterSpacing: '-0.02em',
+              color: timeLeft <= 30 ? '#DC2626' : timeLeft <= 60 ? '#D97706' : '#94A3B8',
+              transition: 'color 0.5s',
+            }}
+          >
+            {formatTime(timeLeft)}
           </div>
         </div>
 
