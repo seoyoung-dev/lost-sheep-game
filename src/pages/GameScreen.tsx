@@ -63,6 +63,7 @@ export default function GameScreen() {
             />
             <ResultOverlay
               reveal={state.reveal}
+              cards={state.cards}
               onClose={() => dispatch({ type: 'hide_reveal' })}
             />
           </div>

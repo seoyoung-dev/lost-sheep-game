@@ -1,11 +1,22 @@
 import type { RevealState } from '../state/gameStore'
+import type { SheepCard } from '../game/types'
 
 interface ResultOverlayProps {
   reveal: RevealState
+  cards: SheepCard[]
   onClose: () => void
 }
 
-export default function ResultOverlay({ reveal, onClose }: ResultOverlayProps) {
+function getPositionLabel(cards: SheepCard[], card: SheepCard) {
+  const position = cards.findIndex(item => item.id === card.id) + 1
+  return position > 0 ? `${position}번` : `#${card.id}`
+}
+
+function formatCardPositions(cards: SheepCard[], trio: SheepCard[]) {
+  return trio.map(card => getPositionLabel(cards, card)).join(' · ')
+}
+
+export default function ResultOverlay({ reveal, cards, onClose }: ResultOverlayProps) {
   if (!reveal) {
     return null
   }
@@ -43,11 +54,11 @@ export default function ResultOverlay({ reveal, onClose }: ResultOverlayProps) {
         <div style={{ fontSize: '0.95rem', color: '#64748B', lineHeight: 1.6, marginBottom: '18px' }}>
           {hasSelectedCards
             ? reveal.isCorrect
-              ? `선택한 조합이 정답입니다. 선택 카드: ${reveal.selectedCards!.map(card => `#${card.id}`).join(' · ')}`
-              : `선택한 조합은 정답이 아닙니다. 선택 카드: ${reveal.selectedCards!.map(card => `#${card.id}`).join(' · ')}`
+              ? `선택한 조합이 정답입니다. 선택 카드: ${formatCardPositions(cards, reveal.selectedCards!)}`
+              : `선택한 조합은 정답이 아닙니다. 선택 카드: ${formatCardPositions(cards, reveal.selectedCards!)}`
             : reveal.mode === 'trio'
-            ? hasTrios
-              ? `현재 카드에서 찾을 수 있는 조합은 총 ${reveal.trios.length}개입니다.`
+              ? hasTrios
+                ? `현재 카드에서 찾을 수 있는 조합은 총 ${reveal.trios.length}개입니다.`
               : '현재 카드에는 정답 조합이 없습니다.'
             : hasTrios
               ? `현재 카드에는 실제로 ${reveal.trios.length}개의 조합이 있습니다.`
@@ -67,7 +78,7 @@ export default function ResultOverlay({ reveal, onClose }: ResultOverlayProps) {
                   fontWeight: 700,
                 }}
               >
-                조합 {index + 1}: {trio.map(card => `#${card.id}`).join(' · ')}
+                조합 {index + 1}: {formatCardPositions(cards, trio)}
               </div>
             ))}
           </div>
