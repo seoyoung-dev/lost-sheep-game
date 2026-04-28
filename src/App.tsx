@@ -1,5 +1,5 @@
-import DesignAll from './pages/DesignAll'
+import GameScreen from './pages/GameScreen'
 
 export default function App() {
-  return <DesignAll />
+  return <GameScreen />
 }
