@@ -11,6 +11,7 @@ export default function ResultOverlay({ reveal, onClose }: ResultOverlayProps) {
   }
 
   const hasTrios = reveal.trios.length > 0
+  const hasSelectedCards = Boolean(reveal.selectedCards?.length)
 
   return (
     <div
@@ -40,7 +41,11 @@ export default function ResultOverlay({ reveal, onClose }: ResultOverlayProps) {
           {reveal.mode === 'trio' ? '정답 조합 공개' : '조합 없음 판정'}
         </div>
         <div style={{ fontSize: '0.95rem', color: '#64748B', lineHeight: 1.6, marginBottom: '18px' }}>
-          {reveal.mode === 'trio'
+          {hasSelectedCards
+            ? reveal.isCorrect
+              ? `선택한 조합이 정답입니다. 선택 카드: ${reveal.selectedCards!.map(card => `#${card.id}`).join(' · ')}`
+              : `선택한 조합은 정답이 아닙니다. 선택 카드: ${reveal.selectedCards!.map(card => `#${card.id}`).join(' · ')}`
+            : reveal.mode === 'trio'
             ? hasTrios
               ? `현재 카드에서 찾을 수 있는 조합은 총 ${reveal.trios.length}개입니다.`
               : '현재 카드에는 정답 조합이 없습니다.'
@@ -49,7 +54,7 @@ export default function ResultOverlay({ reveal, onClose }: ResultOverlayProps) {
               : '현재 카드에는 실제로 조합이 없습니다.'}
         </div>
 
-        {hasTrios && (
+        {!hasSelectedCards && hasTrios && (
           <div style={{ display: 'grid', gap: '10px', marginBottom: '18px' }}>
             {reveal.trios.map((trio, index) => (
               <div

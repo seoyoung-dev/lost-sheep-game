@@ -34,6 +34,21 @@ export default function useBuzzerKeys({ dispatch }: UseBuzzerKeysOptions) {
         event.preventDefault()
         dispatch({ type: 'next_round' })
       }
+
+      if (/^[1-9]$/.test(key)) {
+        event.preventDefault()
+        dispatch({ type: 'select_position', position: Number(key) })
+      }
+
+      if (key === 'backspace') {
+        event.preventDefault()
+        dispatch({ type: 'remove_last_selection' })
+      }
+
+      if (key === 'enter') {
+        event.preventDefault()
+        dispatch({ type: 'submit_selection' })
+      }
     }
 
     window.addEventListener('keydown', onKeyDown)

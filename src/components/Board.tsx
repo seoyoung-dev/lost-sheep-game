@@ -4,9 +4,14 @@ import type { SheepCard } from '../game/types'
 interface BoardProps {
   cards: SheepCard[]
   highlightedIds?: Set<number>
+  selectedPositions?: number[]
 }
 
-export default function Board({ cards, highlightedIds = new Set<number>() }: BoardProps) {
+export default function Board({
+  cards,
+  highlightedIds = new Set<number>(),
+  selectedPositions = [],
+}: BoardProps) {
   return (
     <div
       style={{
@@ -22,7 +27,7 @@ export default function Board({ cards, highlightedIds = new Set<number>() }: Boa
           key={card.id}
           card={card}
           number={index + 1}
-          highlighted={highlightedIds.has(card.id)}
+          highlighted={highlightedIds.has(card.id) || selectedPositions.includes(index + 1)}
         />
       ))}
     </div>

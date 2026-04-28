@@ -1,5 +1,5 @@
 import { dealRound } from '../game/round'
-import { findAllValidTrios } from '../game/logic'
+import { findAllValidTrios, isValidTrio } from '../game/logic'
 import type { SheepCard } from '../game/types'
 
 export type Team = 'team1' | 'team2'
@@ -9,14 +9,14 @@ export type RevealState =
   | {
       mode: 'trio' | 'noCombo'
       trios: SheepCard[][]
+      selectedCards?: SheepCard[]
+      isCorrect?: boolean
     }
 
 export type BuzzState =
   | null
   | {
       team: Team
-      deadline: number
-      expired: boolean
     }
 
 export interface GameState {
@@ -25,20 +25,22 @@ export interface GameState {
   scores: { team1: number; team2: number }
   buzz: BuzzState
   reveal: RevealState
+  selectedPositions: number[]
 }
 
 export type GameAction =
   | { type: 'next_round' }
-  | { type: 'buzz'; team: Team; now?: number }
+  | { type: 'buzz'; team: Team }
   | { type: 'buzz_reset' }
-  | { type: 'buzz_expire' }
   | { type: 'reveal_trios' }
   | { type: 'reveal_no_combo' }
+  | { type: 'select_position'; position: number }
+  | { type: 'remove_last_selection' }
+  | { type: 'submit_selection' }
   | { type: 'hide_reveal' }
   | { type: 'adjust_score'; team: Team; amount: number }
 
 const ROUND_SIZE = 9
-const BUZZ_DURATION_MS = 5_000
 
 function getNewRound() {
   return dealRound(ROUND_SIZE)
@@ -51,6 +53,7 @@ export function createInitialGameState(): GameState {
     scores: { team1: 0, team2: 0 },
     buzz: null,
     reveal: null,
+    selectedPositions: [],
   }
 }
 
@@ -63,6 +66,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         cards: getNewRound(),
         buzz: null,
         reveal: null,
+        selectedPositions: [],
       }
 
     case 'buzz':
@@ -74,29 +78,16 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         buzz: {
           team: action.team,
-          deadline: (action.now ?? Date.now()) + BUZZ_DURATION_MS,
-          expired: false,
         },
         reveal: null,
+        selectedPositions: [],
       }
 
     case 'buzz_reset':
       return {
         ...state,
         buzz: null,
-      }
-
-    case 'buzz_expire':
-      if (!state.buzz || state.buzz.expired) {
-        return state
-      }
-
-      return {
-        ...state,
-        buzz: {
-          ...state.buzz,
-          expired: true,
-        },
+        selectedPositions: [],
       }
 
     case 'reveal_trios':
@@ -116,6 +107,58 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           trios: findAllValidTrios(state.cards),
         },
       }
+
+    case 'select_position':
+      if (!state.buzz) {
+        return state
+      }
+
+      if (action.position < 1 || action.position > state.cards.length) {
+        return state
+      }
+
+      if (state.selectedPositions.includes(action.position)) {
+        return state
+      }
+
+      if (state.selectedPositions.length >= 3) {
+        return state
+      }
+
+      return {
+        ...state,
+        selectedPositions: [...state.selectedPositions, action.position],
+        reveal: null,
+      }
+
+    case 'remove_last_selection':
+      if (state.selectedPositions.length === 0) {
+        return state
+      }
+
+      return {
+        ...state,
+        selectedPositions: state.selectedPositions.slice(0, -1),
+      }
+
+    case 'submit_selection': {
+      if (!state.buzz || state.selectedPositions.length !== 3) {
+        return state
+      }
+
+      const selectedCards = state.selectedPositions.map(position => state.cards[position - 1])
+      const correct = isValidTrio(selectedCards[0], selectedCards[1], selectedCards[2])
+
+      return {
+        ...state,
+        reveal: {
+          mode: 'trio',
+          trios: correct ? [selectedCards] : [],
+          selectedCards,
+          isCorrect: correct,
+        },
+      }
+    }
 
     case 'hide_reveal':
       return {
@@ -142,10 +185,13 @@ export function getHighlightedCardIds(reveal: RevealState) {
     return new Set<number>()
   }
 
+  if (reveal.selectedCards) {
+    return new Set(reveal.selectedCards.map(card => card.id))
+  }
+
   return new Set(reveal.trios.flat().map(card => card.id))
 }
 
 export const GAME_CONSTANTS = {
   ROUND_SIZE,
-  BUZZ_DURATION_MS,
 }

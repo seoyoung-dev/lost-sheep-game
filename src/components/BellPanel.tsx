@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import type { BuzzState } from '../state/gameStore'
 
 interface BellPanelProps {
@@ -44,32 +43,10 @@ function TeamScore({
 }
 
 export default function BellPanel({ scores, buzz }: BellPanelProps) {
-  const [remainingMs, setRemainingMs] = useState(0)
-
-  useEffect(() => {
-    if (!buzz || buzz.expired) {
-      setRemainingMs(0)
-      return
-    }
-
-    const activeBuzz = buzz
-
-    function tick() {
-      setRemainingMs(Math.max(0, activeBuzz.deadline - Date.now()))
-    }
-
-    tick()
-    const timer = window.setInterval(tick, 100)
-    return () => window.clearInterval(timer)
-  }, [buzz])
-
-  const countdown = buzz ? Math.ceil(remainingMs / 1000) : 0
   const buzzLabel = buzz?.team === 'team1' ? '팀 1' : '팀 2'
   const status = !buzz
     ? '대기 중'
-    : buzz.expired
-      ? `${buzzLabel} 벨 입력 · 시간 만료`
-      : `${buzzLabel} 벨 입력`
+    : `${buzzLabel} 벨 입력`
 
   return (
     <section
@@ -114,16 +91,16 @@ export default function BellPanel({ scores, buzz }: BellPanelProps) {
         </div>
         <div
           style={{
-            fontSize: '3rem',
+            fontSize: '1rem',
             lineHeight: 1,
-            fontWeight: 900,
-            color: buzz && !buzz.expired ? '#F59E0B' : '#94A3B8',
+            fontWeight: 800,
+            color: buzz ? '#F59E0B' : '#94A3B8',
           }}
         >
-          {buzz && !buzz.expired ? countdown : '-'}
+          {buzz ? '숫자 1~9 선택 · Enter 제출 · Backspace 취소' : '-'}
         </div>
         <div style={{ marginTop: '10px', color: '#64748B', fontSize: '0.85rem' }}>
-          5초 카운트다운은 안내용이며 자동 감점은 없습니다.
+          벨 입력 후 카드 3장을 선택해 제출합니다.
         </div>
       </div>
     </section>

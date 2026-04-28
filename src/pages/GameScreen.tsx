@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react'
+import { useReducer } from 'react'
 import Board from '../components/Board'
 import BellPanel from '../components/BellPanel'
 import HostPanel from '../components/HostPanel'
@@ -14,19 +14,6 @@ export default function GameScreen() {
   const [state, dispatch] = useReducer(gameReducer, undefined, createInitialGameState)
 
   useBuzzerKeys({ dispatch })
-
-  useEffect(() => {
-    if (!state.buzz || state.buzz.expired) {
-      return
-    }
-
-    const delay = Math.max(0, state.buzz.deadline - Date.now())
-    const timer = window.setTimeout(() => {
-      dispatch({ type: 'buzz_expire' })
-    }, delay)
-
-    return () => window.clearTimeout(timer)
-  }, [state.buzz])
 
   const highlightedIds = getHighlightedCardIds(state.reveal)
 
@@ -45,7 +32,7 @@ export default function GameScreen() {
             잃은 양 찾기
           </div>
           <div style={{ color: '#64748B', fontSize: '0.95rem' }}>
-            Round {state.round} · A / L 벨 입력 · Esc 리셋 · Space 다음 라운드
+            Round {state.round} · A / L 벨 · 숫자 1~9 선택 · Enter 제출 · Esc 리셋 · Space 다음 라운드
           </div>
         </div>
 
@@ -69,7 +56,11 @@ export default function GameScreen() {
               overflow: 'hidden',
             }}
           >
-            <Board cards={state.cards} highlightedIds={highlightedIds} />
+            <Board
+              cards={state.cards}
+              highlightedIds={highlightedIds}
+              selectedPositions={state.selectedPositions}
+            />
             <ResultOverlay
               reveal={state.reveal}
               onClose={() => dispatch({ type: 'hide_reveal' })}
