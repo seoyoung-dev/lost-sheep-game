@@ -8,21 +8,20 @@ interface HostPanelProps {
 function ActionButton({
   label,
   onClick,
-  background,
 }: {
   label: string
   onClick: () => void
-  background: string
 }) {
   return (
     <button
       onClick={onClick}
       style={{
         padding: '14px 16px',
-        background,
-        color: '#fff',
+        background: '#E5E7EB',
+        color: '#475569',
         borderRadius: '16px',
         fontWeight: 800,
+        border: '1px solid #D1D5DB',
       }}
     >
       {label}
@@ -52,20 +51,21 @@ function ScoreControls({
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '8px' }}>
         {[
-          { label: '+1', amount: 1, bg: '#22C55E' },
-          { label: '-1', amount: -1, bg: '#EF4444' },
-          { label: '+2', amount: 2, bg: '#0EA5E9' },
-          { label: '-2', amount: -2, bg: '#F97316' },
+          { label: '+1', amount: 1 },
+          { label: '-1', amount: -1 },
+          { label: '+2', amount: 2 },
+          { label: '-2', amount: -2 },
         ].map(control => (
           <button
             key={control.label}
             onClick={() => dispatch({ type: 'adjust_score', team, amount: control.amount })}
             style={{
               padding: '12px 0',
-              background: control.bg,
-              color: '#fff',
+              background: '#E5E7EB',
+              color: '#475569',
               borderRadius: '14px',
               fontWeight: 800,
+              border: '1px solid #D1D5DB',
             }}
           >
             {control.label}
@@ -92,26 +92,10 @@ export default function HostPanel({ dispatch }: HostPanelProps) {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '10px', marginBottom: '16px' }}>
-        <ActionButton
-          label="다음 라운드"
-          onClick={() => dispatch({ type: 'next_round' })}
-          background="#7C3AED"
-        />
-        <ActionButton
-          label="벨 리셋"
-          onClick={() => dispatch({ type: 'buzz_reset' })}
-          background="#475569"
-        />
-        <ActionButton
-          label="정답 공개"
-          onClick={() => dispatch({ type: 'reveal_trios' })}
-          background="#D97706"
-        />
-        <ActionButton
-          label="조합 없음 처리"
-          onClick={() => dispatch({ type: 'reveal_no_combo' })}
-          background="#0F766E"
-        />
+        <ActionButton label="다음 라운드" onClick={() => dispatch({ type: 'next_round' })} />
+        <ActionButton label="벨 리셋" onClick={() => dispatch({ type: 'buzz_reset' })} />
+        <ActionButton label="정답 공개" onClick={() => dispatch({ type: 'reveal_trios' })} />
+        <ActionButton label="조합 없음 처리" onClick={() => dispatch({ type: 'reveal_no_combo' })} />
       </div>
 
       <div style={{ display: 'grid', gap: '12px' }}>
