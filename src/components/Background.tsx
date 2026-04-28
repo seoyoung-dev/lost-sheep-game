@@ -231,22 +231,16 @@ function Moon({ color, cutColor }: { color: string; cutColor: string }) {
   )
 }
 
-function PhotoScene({ place }: { place: Place }) {
+function FullCardScene({ place }: { place: Place }) {
   const theme = BACKGROUND_THEME[place]
 
   return (
     <div
       style={{
         position: 'absolute',
-        left: '50%',
-        bottom: 0,
-        transform: 'translateX(-50%)',
-        width: '62%',
-        height: '62%',
+        inset: 0,
         overflow: 'hidden',
-        borderRadius: '0',
         background: theme.sky,
-        boxShadow: '0 10px 24px rgba(15, 23, 42, 0.14)',
       }}
     >
       <div
@@ -255,7 +249,7 @@ function PhotoScene({ place }: { place: Place }) {
           left: 0,
           right: 0,
           top: 0,
-          height: '74%',
+          height: '62%',
           background: theme.sky,
         }}
       />
@@ -265,26 +259,26 @@ function PhotoScene({ place }: { place: Place }) {
           left: 0,
           right: 0,
           bottom: 0,
-          height: '26%',
+          height: '38%',
           background: theme.ground,
-          borderTop: '2px solid rgba(255,255,255,0.72)',
+          borderTop: '1px solid rgba(255,255,255,0.4)',
         }}
       />
 
       {place === 'field' && (
         <>
-          <FloatingCloud left="8%" top="8%" scale={0.9} />
-          <Sparkle left="76%" top="10%" size={10} color="#ffffff" />
+          <FloatingCloud left="8%" top="7%" scale={0.95} />
+          <Sparkle left="74%" top="11%" size={10} color="rgba(255,255,255,0.9)" />
           <Sun color="rgba(251, 207, 232, 0.95)" />
         </>
       )}
 
       {place === 'mountain' && (
         <>
-          <Sparkle left="10%" top="16%" size={10} color="#ff8f53" />
-          <Sparkle left="74%" top="9%" size={16} color="#ff8f53" />
-          <Sparkle left="16%" top="25%" size={10} color="#ffd166" />
-          <Sparkle left="80%" top="30%" size={12} color="#ffd166" />
+          <Sparkle left="11%" top="16%" size={10} color="rgba(255,149,102,0.75)" />
+          <Sparkle left="74%" top="9%" size={16} color="rgba(255,149,102,0.75)" />
+          <Sparkle left="16%" top="25%" size={10} color="rgba(255,194,112,0.68)" />
+          <Sparkle left="80%" top="30%" size={12} color="rgba(255,194,112,0.68)" />
           <SunsetGlyph
             skyColor="rgba(255, 140, 90, 0.92)"
             ridgeColor="rgba(223, 92, 70, 0.88)"
@@ -294,9 +288,9 @@ function PhotoScene({ place }: { place: Place }) {
 
       {place === 'river' && (
         <>
-          <Sparkle left="16%" top="15%" size={8} color="#f8fafc" />
-          <Sparkle left="24%" top="13%" size={6} color="#f8fafc" />
-          <Sparkle left="78%" top="15%" size={8} color="#f8fafc" />
+          <Sparkle left="16%" top="15%" size={8} color="rgba(248,250,252,0.82)" />
+          <Sparkle left="24%" top="13%" size={6} color="rgba(248,250,252,0.82)" />
+          <Sparkle left="78%" top="15%" size={8} color="rgba(248,250,252,0.82)" />
           <div
             style={{
               position: 'absolute',
@@ -338,7 +332,7 @@ export default function Background({ place }: BackgroundProps) {
         overflow: 'hidden',
       }}
     >
-      <PhotoScene place={place} />
+      <FullCardScene place={place} />
     </div>
   )
 }

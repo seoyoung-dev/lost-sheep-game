@@ -1,5 +1,5 @@
-import DesignBackground from './pages/DesignBackground'
+import DesignAll from './pages/DesignAll'
 
 export default function App() {
-  return <DesignBackground />
+  return <DesignAll />
 }
