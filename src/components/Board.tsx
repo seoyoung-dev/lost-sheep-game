@@ -10,9 +10,11 @@ export default function Board({ cards, highlightedIds = new Set<number>() }: Boa
   return (
     <div
       style={{
+        width: 'min(100%, calc((100vh - 180px) * 0.9))',
+        margin: '0 auto',
         display: 'grid',
         gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-        gap: '18px',
+        gap: '14px',
       }}
     >
       {cards.map(card => (

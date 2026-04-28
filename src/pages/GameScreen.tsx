@@ -35,15 +35,16 @@ export default function GameScreen() {
       style={{
         minHeight: '100vh',
         background: 'linear-gradient(180deg, #fdf2f8 0%, #eff6ff 100%)',
-        padding: '26px',
+        padding: '16px',
+        overflow: 'hidden',
       }}
     >
       <div style={{ maxWidth: '1520px', margin: '0 auto' }}>
-        <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-          <div style={{ color: '#9D174D', fontWeight: 900, fontSize: '2rem', marginBottom: '6px' }}>
+        <div style={{ marginBottom: '12px', textAlign: 'center' }}>
+          <div style={{ color: '#9D174D', fontWeight: 900, fontSize: '1.75rem', marginBottom: '4px' }}>
             잃은 양 찾기
           </div>
-          <div style={{ color: '#64748B', fontSize: '1rem' }}>
+          <div style={{ color: '#64748B', fontSize: '0.95rem' }}>
             Round {state.round} · A / L 벨 입력 · Esc 리셋 · Space 다음 라운드
           </div>
         </div>
@@ -51,9 +52,10 @@ export default function GameScreen() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'minmax(0, 1.5fr) minmax(360px, 0.9fr)',
-            gap: '22px',
+            gridTemplateColumns: 'minmax(0, 1.45fr) minmax(320px, 0.8fr)',
+            gap: '16px',
             alignItems: 'start',
+            maxHeight: 'calc(100vh - 92px)',
           }}
         >
           <div
@@ -61,9 +63,10 @@ export default function GameScreen() {
               position: 'relative',
               background: 'rgba(255,255,255,0.7)',
               borderRadius: '30px',
-              padding: '22px',
+              padding: '16px',
               border: '2px solid rgba(255,255,255,0.8)',
               boxShadow: '0 20px 46px rgba(148, 163, 184, 0.16)',
+              overflow: 'hidden',
             }}
           >
             <Board cards={state.cards} highlightedIds={highlightedIds} />
@@ -73,7 +76,7 @@ export default function GameScreen() {
             />
           </div>
 
-          <div style={{ display: 'grid', gap: '18px' }}>
+          <div style={{ display: 'grid', gap: '14px' }}>
             <BellPanel scores={state.scores} buzz={state.buzz} />
             <HostPanel dispatch={dispatch} />
           </div>
