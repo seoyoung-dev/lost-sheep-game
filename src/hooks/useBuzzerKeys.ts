@@ -4,9 +4,10 @@ import type { GameAction } from '../state/gameStore'
 
 interface UseBuzzerKeysOptions {
   dispatch: Dispatch<GameAction>
+  hasRevealOpen: boolean
 }
 
-export default function useBuzzerKeys({ dispatch }: UseBuzzerKeysOptions) {
+export default function useBuzzerKeys({ dispatch, hasRevealOpen }: UseBuzzerKeysOptions) {
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.repeat) {
@@ -47,11 +48,16 @@ export default function useBuzzerKeys({ dispatch }: UseBuzzerKeysOptions) {
 
       if (key === 'enter') {
         event.preventDefault()
+        if (hasRevealOpen) {
+          dispatch({ type: 'hide_reveal' })
+          return
+        }
+
         dispatch({ type: 'submit_selection' })
       }
     }
 
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [dispatch])
+  }, [dispatch, hasRevealOpen])
 }

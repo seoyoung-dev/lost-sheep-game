@@ -13,7 +13,7 @@ import {
 export default function GameScreen() {
   const [state, dispatch] = useReducer(gameReducer, undefined, createInitialGameState)
 
-  useBuzzerKeys({ dispatch })
+  useBuzzerKeys({ dispatch, hasRevealOpen: Boolean(state.reveal) })
 
   const highlightedIds = getHighlightedCardIds(state.reveal)
 
