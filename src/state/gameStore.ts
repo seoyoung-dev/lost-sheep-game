@@ -186,6 +186,23 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'hide_reveal':
+      if (state.reveal?.selectedCards) {
+        const shouldPenalize = Boolean(state.buzz && !state.reveal.isCorrect && !state.reveal.isDuplicate)
+
+        return {
+          ...state,
+          scores: shouldPenalize
+            ? {
+                ...state.scores,
+                [state.buzz!.team]: state.scores[state.buzz!.team] - 1,
+              }
+            : state.scores,
+          buzz: null,
+          reveal: null,
+          selectedPositions: [],
+        }
+      }
+
       return {
         ...state,
         reveal: null,
