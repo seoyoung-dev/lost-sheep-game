@@ -75,8 +75,109 @@ function getVerdictConfig(reveal: NonNullable<RevealState>): VerdictConfig | nul
   }
 }
 
+function HintOverlay({ reveal, onClose }: { reveal: NonNullable<RevealState>; onClose: () => void }) {
+  const count = reveal.trios.length
+  const noTriosLeft = count === 0
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'absolute',
+        inset: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '28px',
+        background: 'rgba(15, 23, 42, 0.56)',
+        zIndex: 20,
+        cursor: 'pointer',
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          width: 'min(560px, 100%)',
+          borderRadius: '28px',
+          background: 'rgba(255,255,255,0.97)',
+          padding: '32px 28px 24px',
+          boxShadow: '0 30px 80px rgba(15, 23, 42, 0.28)',
+          textAlign: 'center',
+          cursor: 'default',
+        }}
+      >
+        <div style={{ fontSize: '2.8rem', marginBottom: '12px' }}>
+          {noTriosLeft ? '🔍' : '💡'}
+        </div>
+
+        {noTriosLeft ? (
+          <>
+            <div
+              style={{
+                fontSize: 'clamp(2rem, 7vw, 3rem)',
+                fontWeight: 900,
+                color: '#B91C1C',
+                marginBottom: '10px',
+                lineHeight: 1.1,
+              }}
+            >
+              남은 조합이 없습니다
+            </div>
+            <div style={{ fontSize: '1rem', color: '#64748B', marginBottom: '28px' }}>
+              다음 라운드로 자동으로 넘어갑니다.
+            </div>
+          </>
+        ) : (
+          <>
+            <div
+              style={{
+                fontSize: 'clamp(2.4rem, 8vw, 3.6rem)',
+                fontWeight: 900,
+                color: '#1D4ED8',
+                lineHeight: 1,
+                marginBottom: '10px',
+              }}
+            >
+              {count}개
+            </div>
+            <div
+              style={{
+                fontSize: '1.2rem',
+                fontWeight: 700,
+                color: '#334155',
+                marginBottom: '28px',
+              }}
+            >
+              조합이 남아 있습니다
+            </div>
+          </>
+        )}
+
+        <button
+          onClick={onClose}
+          style={{
+            width: '100%',
+            padding: '14px 16px',
+            background: noTriosLeft ? '#B91C1C' : '#1D4ED8',
+            color: '#fff',
+            borderRadius: '16px',
+            fontWeight: 800,
+            fontSize: '1rem',
+          }}
+        >
+          {noTriosLeft ? '다음 라운드로' : '닫기 (Enter)'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function ResultOverlay({ reveal, cards, onClose }: ResultOverlayProps) {
   if (!reveal) return null
+
+  if (reveal.mode === 'hint') {
+    return <HintOverlay reveal={reveal} onClose={onClose} />
+  }
 
   const verdict = getVerdictConfig(reveal)
   const hasTrios = reveal.trios.length > 0
