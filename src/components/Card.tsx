@@ -36,14 +36,14 @@ export default function Card({
       <div
         style={{
           position: 'absolute',
-          top: '10px',
-          left: '12px',
+          top: '8px',
+          left: '10px',
           zIndex: 3,
-          fontSize: '1.35rem',
+          fontSize: '2rem',
           fontWeight: 900,
           lineHeight: 1,
           color: 'rgba(255,255,255,0.96)',
-          textShadow: '0 2px 8px rgba(15, 23, 42, 0.28)',
+          textShadow: '0 3px 10px rgba(15, 23, 42, 0.3)',
         }}
       >
         {number}
