@@ -23,6 +23,11 @@ export default function ResultOverlay({ reveal, cards, onClose }: ResultOverlayP
 
   const hasTrios = reveal.trios.length > 0
   const hasSelectedCards = Boolean(reveal.selectedCards?.length)
+  const verdictLabel = hasSelectedCards ? (reveal.isCorrect ? '정답' : '실패') : null
+  const verdictColor = reveal.isCorrect ? '#BE123C' : '#1E293B'
+  const verdictGlow = reveal.isCorrect
+    ? '0 12px 36px rgba(244, 63, 94, 0.22)'
+    : '0 12px 36px rgba(30, 41, 59, 0.2)'
 
   return (
     <div
@@ -46,8 +51,33 @@ export default function ResultOverlay({ reveal, cards, onClose }: ResultOverlayP
           background: 'rgba(255,255,255,0.96)',
           padding: '24px',
           boxShadow: '0 30px 80px rgba(15, 23, 42, 0.28)',
+          textAlign: 'center',
         }}
       >
+        {verdictLabel && (
+          <div
+            style={{
+              marginBottom: '18px',
+              padding: '24px 16px 18px',
+              borderRadius: '24px',
+              background: reveal.isCorrect ? 'rgba(255, 228, 230, 0.9)' : 'rgba(226, 232, 240, 0.9)',
+              boxShadow: verdictGlow,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 'clamp(3.6rem, 10vw, 6.2rem)',
+                lineHeight: 1,
+                fontWeight: 900,
+                letterSpacing: '-0.06em',
+                color: verdictColor,
+              }}
+            >
+              {verdictLabel}
+            </div>
+          </div>
+        )}
+
         <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#334155', marginBottom: '10px' }}>
           {reveal.mode === 'trio' ? '정답 조합 공개' : '조합 없음 판정'}
         </div>
