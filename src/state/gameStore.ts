@@ -146,11 +146,21 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return state
       }
 
+      if (state.reveal?.selectedCards) {
+        return state
+      }
+
       const selectedCards = state.selectedPositions.map(position => state.cards[position - 1])
       const correct = isValidTrio(selectedCards[0], selectedCards[1], selectedCards[2])
 
       return {
         ...state,
+        scores: correct
+          ? {
+              ...state.scores,
+              [state.buzz.team]: state.scores[state.buzz.team] + 1,
+            }
+          : state.scores,
         reveal: {
           mode: 'trio',
           trios: correct ? [selectedCards] : [],
