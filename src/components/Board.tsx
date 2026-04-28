@@ -17,11 +17,11 @@ export default function Board({ cards, highlightedIds = new Set<number>() }: Boa
         gap: '14px',
       }}
     >
-      {cards.map(card => (
+      {cards.map((card, index) => (
         <Card
           key={card.id}
           card={card}
-          number={card.id}
+          number={index + 1}
           highlighted={highlightedIds.has(card.id)}
         />
       ))}
