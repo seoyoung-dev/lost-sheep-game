@@ -1,5 +1,5 @@
-import DesignSheep from './pages/DesignSheep'
+import DesignBackground from './pages/DesignBackground'
 
 export default function App() {
-  return <DesignSheep />
+  return <DesignBackground />
 }

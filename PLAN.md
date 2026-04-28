@@ -22,14 +22,36 @@
 | 속성 1 `color` | `white` 흰 양 / `black` 검은 양 / `brown` 갈색 양 |
 | 속성 2 `mood` | `happy` 웃음 / `crying` 울음 / `asleep` 잠듦 |
 | 속성 3 `place` | `field` 들판 / `mountain` 산 / `river` 강가 |
-| 카드 스타일 | 증명사진 스타일 — 큰 얼굴, 양털이 사람 헤어처럼 위에 쌓임, 몸통이 아래 살짝, 다리 없음 |
-| 캐릭터 톤 | 귀여운 카툰, 큰 검은 눈 + 광택, 볼터치 핑크, Y자 코, 컬 장식 |
+| 양 자산 방식 | **사용자가 그린 9개 PNG 이미지 사용** |
+| 양 파일 위치 | `src/assets/sheep/` |
+| 양 파일명 규칙 | `sheep-{color}-{mood}.png` |
 | 배경 표현 | 풍경 일러스트 (들판·산·강가가 배경 전체에 명확히) |
 | 팔레트 | 파스텔 — 배경 #FCE7F3·#DBEAFE, 팀1 #EF4444, 팀2 #3B82F6, 강조 #FACC15 |
 | 라운드당 카드 | 9장 (3×3) |
 | 벨 입력 | 키보드 A(팀1)·L(팀2). 5초 카운트다운은 안내용, **자동 감점 없음** |
 | 운영 | 사회자 수동 진행 + ±1/±2 점수 버튼 |
 | 스택 | Vite + React + TypeScript, 정적 빌드 (`dist/`) |
+
+### 양 이미지 파일명 규칙
+
+아래 9개 파일명을 그대로 사용한다.
+
+- `sheep-white-happy.png`
+- `sheep-white-crying.png`
+- `sheep-white-asleep.png`
+- `sheep-black-happy.png`
+- `sheep-black-crying.png`
+- `sheep-black-asleep.png`
+- `sheep-brown-happy.png`
+- `sheep-brown-crying.png`
+- `sheep-brown-asleep.png`
+
+기본 원칙:
+
+- 전부 소문자
+- 구분자는 하이픈 `-`
+- 확장자는 우선 `.png`
+- 숫자 코드, 한글 파일명 사용하지 않음
 
 ### 점수 규칙
 
@@ -54,17 +76,22 @@ combination-game/
 ├── vite.config.ts
 ├── tsconfig.json / tsconfig.app.json / tsconfig.node.json
 ├── index.html
+├── PLAN.md
 ├── reference/          ← 원본 룰·이미지 (건드리지 말 것)
 │   ├── original-rule.md
 │   └── image.png
 └── src/
     ├── main.tsx
-    ├── App.tsx          ← 현재 DesignSheep 페이지만 렌더링
+    ├── App.tsx
     ├── styles/global.css
+    ├── assets/
+    │   └── sheep/      ← 사용자 제공 9개 PNG 저장 완료
     ├── components/
-    │   └── Sheep.tsx    ← Phase 1A 작업 중 (아래 설명)
+    │   ├── Sheep.tsx        ← 이미지 매핑 컴포넌트
+    │   └── Background.tsx   ← 배경 3종 시안 컴포넌트
     ├── pages/
-    │   └── DesignSheep.tsx  ← 양 9장 시안 페이지 (임시)
+    │   ├── DesignSheep.tsx       ← 9종 미리보기 임시 페이지
+    │   └── DesignBackground.tsx  ← 배경 3종 시안 임시 페이지
     └── vite-env.d.ts
 ```
 
@@ -72,36 +99,40 @@ combination-game/
 
 ---
 
-### 🔄 Phase 1A — 양 SVG 디자인 (사용자 승인 대기 중)
+### ✅ Phase 1A — 사용자 제작 양 이미지 9종 정리 및 자산 연결 (완료)
 
-`src/components/Sheep.tsx`에 `<Sheep color={...} mood={...} size={...} />` 컴포넌트 작성됨.
+- 기존 SVG 양 시안은 **폐기 예정 또는 참고용**이다.
+- 앞으로 최종 양 비주얼은 **사용자가 제공하는 9개 이미지 파일**을 기준으로 한다.
+- 9개 자산이 `src/assets/sheep/`에 저장되었고, 파일명 규칙 검수 완료.
+- `DesignSheep`에서 3색 × 3표정 미리보기 연결 확인 완료.
 
-**현재 디자인 방향 (3차 수정 버전, 승인 미완료):**
-- 증명사진 스타일 — 큰 얼굴 중심, 다리 없음
-- 양털이 얼굴 위에 "헤어" 처럼 쌓이는 형태
-- SVG 레이어 순서: 몸통 → 귀 → 얼굴 → 표정 → 양털 헤어 (얼굴 윗부분을 덮음)
-- 아래에 몸통 원이 살짝 보임
-- 눈: happy=반달 웃음 눈(호), crying=큰 검은 원+눈물+처진 눈썹, asleep=닫힌 호+z
-- 볼터치, Y자 코, S자 컬 장식 포함
-- viewBox: `0 0 160 188`
+`src/components/Sheep.tsx`
 
-`src/pages/DesignSheep.tsx` — 3색 × 3표정 = 9장 그리드로 시안 확인하는 임시 페이지.
+- SVG를 직접 그리지 않고 `color`와 `mood` 조합에 맞는 PNG를 매핑해서 렌더링한다.
+- 내부적으로 기대 파일명 `sheep-{color}-{mood}.png`를 사용한다.
+- 파일이 없을 경우 placeholder를 렌더링하도록 안전 장치 포함.
 
-> ⚠️ **사용자가 아직 Phase 1A 디자인을 최종 승인하지 않았음.**
-> 브라우저에서 http://localhost:5173 을 보여주고 OK를 받은 뒤 Phase 1B로 넘어갈 것.
+`src/pages/DesignSheep.tsx`
+
+- 3색 × 3표정 = 9개 조합 미리보기 페이지
+- 자산이 모두 들어오면 파일 누락/오배치/오타를 이 페이지에서 먼저 확인
 
 ---
 
-### ⬜ Phase 1B — 배경 3종 시안 (미시작)
+### ✅ Phase 1B — 배경 3종 시안 (확정)
 
-`src/components/Background.tsx`를 새로 만들어야 함.
+`src/components/Background.tsx` 작성 완료.
 
 ```tsx
-// 시그니처
 <Background place={'field' | 'mountain' | 'river'} />
 ```
 
 각 배경은 카드 비율(약 3:4)에 맞게 그리고, **양이 올라설 하단 중앙 영역을 비워 둘 것**.
+
+- 배경은 이미지 파일이 아니라 **코드 기반 일러스트**로 제작
+- 원본 `reference/image.png`처럼 카드 뒤의 세로 장면 박스 구조를 참고해 구성
+- 해/달/노을 아이콘은 유지하되, 배경색과 유사한 저대비 톤으로 조정
+- 양 이미지가 배경 하단 중앙에 자연스럽게 올라오도록 안전 여백 조정
 
 | place | 표현 |
 |-------|------|
@@ -109,23 +140,33 @@ combination-game/
 | `mountain` | 회색 삼각형 두 개 겹침 + 흰 봉우리 + 하늘 그라디언트 |
 | `river` | 파란 곡선 두 줄 + 자갈 점 + 모래 톤 |
 
-`src/pages/DesignBackground.tsx`(임시)도 만들어서 3종을 한 화면에 나란히 표시.
-→ **사용자 승인 후 Phase 1C로.**
+`src/pages/DesignBackground.tsx`에서 3종 시안 확인 및 사용자 승인 완료.
+
+현재 `src/App.tsx`는 `DesignBackground`를 렌더링하도록 되어 있음.
 
 ---
 
-### ⬜ Phase 1C — 카드 합성 27장 시안 (미시작)
+### ⬜ Phase 1C — 카드 합성 27장 시안 (다음 작업)
 
-`src/components/Card.tsx`를 만들어야 함.
+다음으로 `src/components/Card.tsx`를 만들어야 함.
 
 ```tsx
 <Card card={SheepCard} number={n} highlighted={boolean} />
 ```
 
+- Card는 `배경 + 양 이미지 + 카드 번호 + 프레임` 합성
+- 27장 전체 조합은 데이터 기반으로 생성
+- 이미지 비율 차이를 고려해 카드 내부 정렬 규칙을 고정
+
+기본 규칙:
+
+- 양 이미지는 카드 하단 중앙 정렬
+- 카드 내부 최대 높이 비율을 정해 일관된 크기로 표시
+- 배경이 가리지 않도록 z-index 순서 고정
 - 흰 라운드 사각 프레임 + 파스텔 그림자
 - 좌상단에 큰 카드 번호
-- Background 위에 Sheep 합성 (Sheep은 배경 하단 중앙에 위치)
-- `src/pages/DesignAll.tsx`(임시): 27장 전체 그리드
+
+`src/pages/DesignAll.tsx`(임시): 27장 전체 그리드 예정
 
 → **사용자 최종 디자인 승인.** 이후 디자인 변경은 마이크로 조정만 허용.
 
@@ -146,19 +187,16 @@ src/game/
 핵심 로직:
 
 ```ts
-// types.ts
 export type Color = 'white' | 'black' | 'brown'
 export type Mood  = 'happy' | 'crying' | 'asleep'
 export type Place = 'field' | 'mountain' | 'river'
 export type SheepCard = { id: number; color: Color; mood: Mood; place: Place }
 
-// logic.ts
-// 3속성 모두 "전부 같음" 또는 "전부 다름"이어야 valid
 function isValidTrio(a, b, c): boolean {
   return ['color', 'mood', 'place'].every(attr => {
     const vals = [a[attr], b[attr], c[attr]]
-    return (vals[0] === vals[1] && vals[1] === vals[2])  // 전부 같음
-        || new Set(vals).size === 3                       // 전부 다름
+    return (vals[0] === vals[1] && vals[1] === vals[2])
+        || new Set(vals).size === 3
   })
 }
 ```
@@ -172,14 +210,14 @@ function isValidTrio(a, b, c): boolean {
 ```
 src/
 ├── state/
-│   └── gameStore.ts      ← useReducer 기반 단일 store
+│   └── gameStore.ts
 ├── components/
-│   ├── Board.tsx          ← 3×3 카드 그리드, 정답 강조
-│   ├── BellPanel.tsx      ← 양팀 점수·벨 상태·5초 카운트다운
-│   ├── HostPanel.tsx      ← 사회자 컨트롤
-│   └── ResultOverlay.tsx  ← 정답 공개 오버레이
+│   ├── Board.tsx
+│   ├── BellPanel.tsx
+│   ├── HostPanel.tsx
+│   └── ResultOverlay.tsx
 └── hooks/
-    └── useBuzzerKeys.ts   ← A/L/Esc/Space 키 리스너
+    └── useBuzzerKeys.ts
 ```
 
 **상태 모델:**
@@ -187,16 +225,16 @@ src/
 ```ts
 type GameState = {
   round: number
-  cards: SheepCard[]           // 현재 9장
+  cards: SheepCard[]
   scores: { team1: number; team2: number }
   buzz: null | {
     team: 'team1' | 'team2'
-    deadline: number           // ms epoch, 카운트다운용
-    expired: boolean           // true여도 자동 감점 없음 — 사회자 판정
+    deadline: number
+    expired: boolean
   }
   reveal: null | {
     mode: 'trio' | 'noCombo'
-    trios: SheepCard[][]       // 정답 강조할 조합들
+    trios: SheepCard[][]
   }
 }
 ```
@@ -220,14 +258,28 @@ type GameState = {
 ```bash
 cd /Users/joseoyeong/projects/combination-game
 npm run dev
-# http://localhost:5173 에서 현재 양 시안 확인
+# http://localhost:5173 에서 현재 배경 3종 시안 확인
 ```
 
 **다음 할 일 (순서대로):**
-1. 사용자에게 http://localhost:5173 의 양 시안 9종을 보여주고 Phase 1A 승인 받기
-2. 승인되면 `src/components/Background.tsx` + `src/pages/DesignBackground.tsx` 작성
-3. 배경 승인 → `src/components/Card.tsx` + `src/pages/DesignAll.tsx` 작성 (27장 합성)
-4. 디자인 최종 승인 후 Phase 2~4 구현
+1. `src/components/Card.tsx` 작성
+2. `src/pages/DesignAll.tsx` 작성
+3. 배경 + 양 이미지 + 카드 번호를 합성한 27장 전체 카드 시안 확인
+4. 카드 디자인 최종 승인
+5. 디자인 승인 후 Phase 2~4 구현
+
+---
+
+## 테스트 체크리스트
+
+- 9개 파일이 모두 존재하는지 확인
+- 각 파일명이 slug 규칙과 정확히 일치하는지 확인
+- `DesignSheep`에서 3색 × 3표정이 모두 올바른 이미지로 표시되는지 확인
+- `happy / crying / asleep` 매핑이 뒤바뀌지 않았는지 확인
+- `black`과 `brown` 파일이 잘못 바뀌지 않았는지 확인
+- `DesignBackground`에서 배경 3종이 의도한 색감/아이콘/배치로 표시되는지 확인
+- 카드 합성 후 양 이미지가 카드 하단 중앙에 안정적으로 정렬되는지 확인
+- `npm run build`가 통과하는지 확인
 
 ---
 
