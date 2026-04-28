@@ -5,12 +5,14 @@ interface BoardProps {
   cards: SheepCard[]
   highlightedIds?: Set<number>
   selectedPositions?: number[]
+  dimNonHighlighted?: boolean
 }
 
 export default function Board({
   cards,
   highlightedIds = new Set<number>(),
   selectedPositions = [],
+  dimNonHighlighted = false,
 }: BoardProps) {
   return (
     <div
@@ -32,6 +34,7 @@ export default function Board({
             number={position}
             highlighted={highlightedIds.has(card.id)}
             selectedIndex={selectionOrder >= 0 ? selectionOrder + 1 : undefined}
+            dimmed={dimNonHighlighted && !highlightedIds.has(card.id)}
           />
         )
       })}

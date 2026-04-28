@@ -80,6 +80,7 @@ export default function GameScreen() {
               cards={state.cards}
               highlightedIds={highlightedIds}
               selectedPositions={state.selectedPositions}
+              dimNonHighlighted={state.reveal?.mode === 'hintCards' && state.reveal.trios.length > 0}
             />
             <ResultOverlay
               reveal={state.reveal}

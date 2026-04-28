@@ -7,6 +7,7 @@ interface CardProps {
   number?: number
   highlighted?: boolean
   selectedIndex?: number  // 1·2·3 선택 순서, undefined = 미선택
+  dimmed?: boolean
 }
 
 const CARD_RATIO = '53 / 63'
@@ -18,6 +19,7 @@ export default function Card({
   number = card.id,
   highlighted = false,
   selectedIndex,
+  dimmed = false,
 }: CardProps) {
   const isSelected = selectedIndex !== undefined
 
@@ -30,9 +32,9 @@ export default function Card({
     boxShadow = '0 0 0 4px #3B82F6, 0 20px 48px rgba(59, 130, 246, 0.55)'
     transform = 'scale(1.04)'
   } else if (highlighted) {
-    border = '5px solid #FACC15'
-    boxShadow = '0 0 0 3px #F59E0B, 0 20px 40px rgba(250, 204, 21, 0.45)'
-    transform = 'scale(1.02)'
+    border = '6px solid #FACC15'
+    boxShadow = '0 0 0 5px #F59E0B, 0 0 24px rgba(250, 204, 21, 0.9), 0 20px 40px rgba(250, 204, 21, 0.5)'
+    transform = 'scale(1.04)'
   } else {
     border = '3px solid rgba(255,255,255,0.96)'
     boxShadow = '0 10px 24px rgba(15, 23, 42, 0.12)'
@@ -118,9 +120,23 @@ export default function Card({
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'rgba(250, 204, 21, 0.12)',
+            background: 'rgba(250, 204, 21, 0.22)',
             zIndex: 1,
             pointerEvents: 'none',
+          }}
+        />
+      )}
+
+      {/* 카드 힌트 비대상 카드 어둡게 */}
+      {dimmed && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.52)',
+            zIndex: 3,
+            pointerEvents: 'none',
+            borderRadius: '15px',
           }}
         />
       )}
