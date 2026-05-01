@@ -4,6 +4,8 @@ interface BellPanelProps {
   scores: { team1: number; team2: number }
   buzz: BuzzState
   onBuzz: (team: Team) => void
+  selectedCount: number
+  onSubmit: () => void
 }
 
 function TeamScore({
@@ -48,7 +50,7 @@ function TeamScore({
   )
 }
 
-export default function BellPanel({ scores, buzz, onBuzz }: BellPanelProps) {
+export default function BellPanel({ scores, buzz, onBuzz, selectedCount, onSubmit }: BellPanelProps) {
   const buzzLabel = buzz?.team === 'team1' ? '팀 1' : '팀 2'
   const status = !buzz
     ? '대기 중'
@@ -110,6 +112,25 @@ export default function BellPanel({ scores, buzz, onBuzz }: BellPanelProps) {
         <div style={{ marginTop: '10px', color: '#64748B', fontSize: '0.85rem' }}>
           벨 입력 후 카드 3장을 선택해 제출합니다.
         </div>
+
+        {selectedCount === 3 && (
+          <button
+            onClick={onSubmit}
+            style={{
+              marginTop: '14px',
+              width: '100%',
+              padding: '14px',
+              background: '#3B82F6',
+              color: '#fff',
+              borderRadius: '16px',
+              fontWeight: 900,
+              fontSize: '1.05rem',
+              boxShadow: '0 8px 24px rgba(59,130,246,0.4)',
+            }}
+          >
+            조합 제출 (Enter)
+          </button>
+        )}
       </div>
     </section>
   )
