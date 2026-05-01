@@ -1,8 +1,9 @@
-import type { BuzzState } from '../state/gameStore'
+import type { BuzzState, Team } from '../state/gameStore'
 
 interface BellPanelProps {
   scores: { team1: number; team2: number }
   buzz: BuzzState
+  onBuzz: (team: Team) => void
 }
 
 function TeamScore({
@@ -11,15 +12,18 @@ function TeamScore({
   score,
   active,
   color,
+  onClick,
 }: {
   name: string
   hotkey: string
   score: number
   active: boolean
   color: string
+  onClick: () => void
 }) {
   return (
     <div
+      onClick={onClick}
       style={{
         flex: 1,
         borderRadius: '24px',
@@ -30,6 +34,8 @@ function TeamScore({
           ? `0 18px 32px ${color}55`
           : '0 14px 28px rgba(148, 163, 184, 0.14)',
         border: active ? '2px solid rgba(255,255,255,0.36)' : '2px solid rgba(255,255,255,0.7)',
+        cursor: 'pointer',
+        userSelect: 'none',
       }}
     >
       <div style={{ fontSize: '0.95rem', fontWeight: 800, opacity: 0.92 }}>
@@ -42,7 +48,7 @@ function TeamScore({
   )
 }
 
-export default function BellPanel({ scores, buzz }: BellPanelProps) {
+export default function BellPanel({ scores, buzz, onBuzz }: BellPanelProps) {
   const buzzLabel = buzz?.team === 'team1' ? '팀 1' : '팀 2'
   const status = !buzz
     ? '대기 중'
@@ -65,6 +71,7 @@ export default function BellPanel({ scores, buzz }: BellPanelProps) {
           score={scores.team1}
           active={buzz?.team === 'team1'}
           color="#EF4444"
+          onClick={() => onBuzz('team1')}
         />
         <TeamScore
           name="팀 2"
@@ -72,6 +79,7 @@ export default function BellPanel({ scores, buzz }: BellPanelProps) {
           score={scores.team2}
           active={buzz?.team === 'team2'}
           color="#3B82F6"
+          onClick={() => onBuzz('team2')}
         />
       </div>
 

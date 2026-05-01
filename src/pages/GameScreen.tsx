@@ -138,6 +138,8 @@ export default function GameScreen() {
               highlightedIds={highlightedIds}
               selectedPositions={state.selectedPositions}
               dimNonHighlighted={state.reveal?.mode === 'hintCards' && state.reveal.trios.length > 0}
+              onSelectPosition={position => dispatch({ type: 'select_position', position })}
+              clickable={Boolean(state.buzz)}
             />
             <ResultOverlay
               reveal={state.reveal}
@@ -147,7 +149,7 @@ export default function GameScreen() {
           </div>
 
           <div style={{ display: 'grid', gap: '14px', alignContent: 'start', overflowY: 'auto', maxHeight: 'calc(100vh - 92px)' }}>
-            <BellPanel scores={state.scores} buzz={state.buzz} />
+            <BellPanel scores={state.scores} buzz={state.buzz} onBuzz={team => dispatch({ type: 'buzz', team })} />
             <FoundTriosPanel foundTrios={state.foundTrios} cards={state.cards} />
             <HostPanel dispatch={dispatch} />
           </div>

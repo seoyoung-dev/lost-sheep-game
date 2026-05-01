@@ -8,6 +8,8 @@ interface CardProps {
   highlighted?: boolean
   selectedIndex?: number  // 1·2·3 선택 순서, undefined = 미선택
   dimmed?: boolean
+  onClick?: () => void
+  clickable?: boolean
 }
 
 const CARD_RATIO = '53 / 63'
@@ -20,6 +22,8 @@ export default function Card({
   highlighted = false,
   selectedIndex,
   dimmed = false,
+  onClick,
+  clickable = false,
 }: CardProps) {
   const isSelected = selectedIndex !== undefined
 
@@ -43,6 +47,7 @@ export default function Card({
 
   return (
     <div
+      onClick={onClick}
       style={{
         position: 'relative',
         aspectRatio: CARD_RATIO,
@@ -54,6 +59,7 @@ export default function Card({
         transform,
         transition: 'transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease',
         zIndex: isSelected ? 2 : highlighted ? 1 : 0,
+        cursor: clickable ? 'pointer' : 'default',
       }}
     >
       <Background place={card.place} />

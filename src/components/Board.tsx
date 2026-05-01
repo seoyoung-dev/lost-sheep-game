@@ -6,6 +6,8 @@ interface BoardProps {
   highlightedIds?: Set<number>
   selectedPositions?: number[]
   dimNonHighlighted?: boolean
+  onSelectPosition?: (position: number) => void
+  clickable?: boolean
 }
 
 export default function Board({
@@ -13,6 +15,8 @@ export default function Board({
   highlightedIds = new Set<number>(),
   selectedPositions = [],
   dimNonHighlighted = false,
+  onSelectPosition,
+  clickable = false,
 }: BoardProps) {
   return (
     <div
@@ -35,6 +39,8 @@ export default function Board({
             highlighted={highlightedIds.has(card.id)}
             selectedIndex={selectionOrder >= 0 ? selectionOrder + 1 : undefined}
             dimmed={dimNonHighlighted && !highlightedIds.has(card.id)}
+            onClick={onSelectPosition ? () => onSelectPosition(position) : undefined}
+            clickable={clickable}
           />
         )
       })}
