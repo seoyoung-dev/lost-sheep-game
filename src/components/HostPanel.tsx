@@ -93,7 +93,7 @@ export default function HostPanel({ dispatch }: HostPanelProps) {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '10px', marginBottom: '16px' }}>
         <ActionButton label="다음 라운드" onClick={() => dispatch({ type: 'next_round' })} />
-        <ActionButton label="벨 리셋" onClick={() => dispatch({ type: 'buzz_reset' })} />
+        <ActionButton label="선택 초기화" onClick={() => dispatch({ type: 'buzz_reset' })} />
         <ActionButton label="정답 공개" onClick={() => dispatch({ type: 'reveal_trios' })} />
         <ActionButton label="조합 없음 처리" onClick={() => dispatch({ type: 'reveal_no_combo' })} />
         <ActionButton label="개수 힌트" onClick={() => dispatch({ type: 'hint' })} />
