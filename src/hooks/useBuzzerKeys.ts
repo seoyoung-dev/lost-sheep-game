@@ -26,6 +26,11 @@ export default function useBuzzerKeys({ dispatch, hasRevealOpen }: UseBuzzerKeys
         dispatch({ type: 'buzz', team: 'team2' })
       }
 
+      if (key === 'n') {
+        event.preventDefault()
+        dispatch({ type: 'reveal_no_combo' })
+      }
+
       if (key === 'escape') {
         event.preventDefault()
         dispatch({ type: 'buzz_reset' })

@@ -88,11 +88,14 @@ export default function GameScreen() {
       <div style={{ maxWidth: '1520px', margin: '0 auto' }}>
         <div style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ textAlign: 'center', flex: 1 }}>
-            <div style={{ color: '#9D174D', fontWeight: 900, fontSize: '1.75rem', marginBottom: '4px' }}>
-              잃은 양 찾기
+            <div style={{ color: '#9D174D', fontWeight: 900, fontSize: '1.75rem', lineHeight: 1.1, marginBottom: '3px' }}>
+              춘천침례교회 청년부 레크레이션
             </div>
-            <div style={{ color: '#64748B', fontSize: '0.95rem' }}>
-              Round {state.round} · A / L 벨 · 숫자 1~9 선택 · Enter 제출 · Esc 리셋 · Space 다음 라운드
+            <div style={{ color: '#94A3B8', fontSize: '0.78rem', fontStyle: 'italic', marginBottom: '3px' }}>
+              잃은 것을 찾아낸즉 기뻐 어깨에 메고 — 누가복음 15:5
+            </div>
+            <div style={{ color: '#64748B', fontSize: '0.88rem' }}>
+              Round {state.round} · A / L 벨 · N 조합없음 · 숫자 1~9 선택 · Enter 제출 · Esc 리셋
             </div>
           </div>
           <div
