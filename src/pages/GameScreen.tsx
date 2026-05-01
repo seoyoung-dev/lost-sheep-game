@@ -12,7 +12,7 @@ import {
 } from '../state/gameStore'
 import { playBuzz, playCorrect, playWrong, playHint } from '../utils/sounds'
 
-const TIMEOUT_SECONDS = 30
+const TIMEOUT_SECONDS = 5 * 60
 
 function formatTime(seconds: number) {
   const m = Math.floor(seconds / 60)
