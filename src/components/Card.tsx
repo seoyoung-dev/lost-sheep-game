@@ -133,7 +133,7 @@ export default function Card({
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'rgba(15, 23, 42, 0.52)',
+            background: 'rgba(0, 0, 0, 0.82)',
             zIndex: 3,
             pointerEvents: 'none',
             borderRadius: '15px',
