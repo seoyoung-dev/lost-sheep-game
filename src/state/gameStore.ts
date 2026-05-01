@@ -180,7 +180,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       }
 
       if (state.selectedPositions.includes(action.position)) {
-        return state
+        return {
+          ...state,
+          selectedPositions: state.selectedPositions.filter(p => p !== action.position),
+        }
       }
 
       if (state.selectedPositions.length >= 3) {
