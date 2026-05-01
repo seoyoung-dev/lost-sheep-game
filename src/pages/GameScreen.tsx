@@ -26,8 +26,8 @@ export default function GameScreen() {
   const [timedOut, setTimedOut] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  // 라운드 시작 또는 정답 발생 시 타이머 리셋
-  const timerResetKey = `${state.round}-${state.foundTrios.length}`
+  // 라운드 변경 또는 팀 액션(벨·선택·제출) 발생 시 타이머 리셋
+  const timerResetKey = `${state.round}-${state.teamActionCount}`
   useEffect(() => {
     setTimeLeft(TIMEOUT_SECONDS)
     setTimedOut(false)

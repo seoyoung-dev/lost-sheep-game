@@ -29,6 +29,7 @@ export interface GameState {
   selectedPositions: number[]
   foundTrioKeys: string[]
   foundTrios: SheepCard[][]
+  teamActionCount: number
 }
 
 export type GameAction =
@@ -69,6 +70,7 @@ export function createInitialGameState(): GameState {
     selectedPositions: [],
     foundTrioKeys: [],
     foundTrios: [],
+    teamActionCount: 0,
   }
 }
 
@@ -93,11 +95,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
       return {
         ...state,
-        buzz: {
-          team: action.team,
-        },
+        buzz: { team: action.team },
         reveal: null,
         selectedPositions: [],
+        teamActionCount: state.teamActionCount + 1,
       }
 
     case 'buzz_reset':
@@ -183,6 +184,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return {
           ...state,
           selectedPositions: state.selectedPositions.filter(p => p !== action.position),
+          teamActionCount: state.teamActionCount + 1,
         }
       }
 
@@ -194,6 +196,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         selectedPositions: [...state.selectedPositions, action.position],
         reveal: null,
+        teamActionCount: state.teamActionCount + 1,
       }
 
     case 'remove_last_selection':
@@ -204,6 +207,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         selectedPositions: state.selectedPositions.slice(0, -1),
+        teamActionCount: state.teamActionCount + 1,
       }
 
     case 'submit_selection': {
@@ -237,6 +241,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           isCorrect: correct && !isDuplicate,
           isDuplicate,
         },
+        teamActionCount: state.teamActionCount + 1,
       }
     }
 
