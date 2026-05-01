@@ -351,22 +351,6 @@ export default function ResultOverlay({ reveal, cards, onClose }: ResultOverlayP
   const hasSelectedCards = Boolean(reveal.selectedCards?.length)
   const isNoCombo = reveal.mode === 'noCombo'
 
-  let bodyText: string
-  if (hasSelectedCards) {
-    const posStr = formatCardPositions(cards, reveal.selectedCards!)
-    if (reveal.isDuplicate) bodyText = `이 조합은 이미 다른 팀이 먼저 맞혔습니다. 선택: ${posStr}`
-    else if (reveal.isCorrect) bodyText = `선택한 조합이 정답입니다. 선택: ${posStr}`
-    else bodyText = `선택한 조합은 정답이 아닙니다. 선택: ${posStr}`
-  } else if (isNoCombo) {
-    bodyText = hasTrios
-      ? `현재 카드에는 실제로 ${reveal.trios.length}개의 조합이 남아 있었습니다.`
-      : '현재 카드에는 실제로 조합이 없습니다. 올바른 판단입니다!'
-  } else {
-    bodyText = hasTrios
-      ? `현재 카드에서 찾을 수 있는 조합은 총 ${reveal.trios.length}개입니다.`
-      : '현재 카드에는 정답 조합이 없습니다.'
-  }
-
   return (
     <div
       onClick={onClose}
@@ -432,13 +416,6 @@ export default function ResultOverlay({ reveal, cards, onClose }: ResultOverlayP
           </div>
         )}
 
-        <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#334155', marginBottom: '10px' }}>
-          {isNoCombo ? '조합 없음 판정' : '정답 조합 공개'}
-        </div>
-
-        <div style={{ fontSize: '0.95rem', color: '#64748B', lineHeight: 1.6, marginBottom: '18px' }}>
-          {bodyText}
-        </div>
 
         {/* 정답 조합 목록 (정답 공개 시) */}
         {!hasSelectedCards && !isNoCombo && hasTrios && (
