@@ -148,8 +148,8 @@ export default function GameScreen() {
 
           <div style={{ display: 'grid', gap: '14px', alignContent: 'start', overflowY: 'auto', maxHeight: 'calc(100vh - 92px)' }}>
             <BellPanel scores={state.scores} buzz={state.buzz} />
-            <HostPanel dispatch={dispatch} />
             <FoundTriosPanel foundTrios={state.foundTrios} cards={state.cards} />
+            <HostPanel dispatch={dispatch} />
           </div>
         </div>
       </div>
