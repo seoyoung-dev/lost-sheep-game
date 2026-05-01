@@ -260,6 +260,18 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       }
 
       if (state.reveal?.mode === 'noCombo') {
+        if (state.reveal.isCorrect) {
+          return {
+            ...state,
+            round: state.round + 1,
+            cards: getNewRound(),
+            buzz: null,
+            reveal: null,
+            selectedPositions: [],
+            foundTrioKeys: [],
+            foundTrios: [],
+          }
+        }
         return { ...state, buzz: null, reveal: null, selectedPositions: [] }
       }
 

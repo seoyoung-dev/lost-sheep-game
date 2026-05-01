@@ -437,19 +437,25 @@ export default function ResultOverlay({ reveal, cards, onClose }: ResultOverlayP
           </div>
         )}
 
+        {isNoCombo && reveal.isCorrect && (
+          <div style={{ fontSize: '1rem', color: '#15803D', fontWeight: 700, marginBottom: '14px' }}>
+            다음 라운드로 넘어갑니다
+          </div>
+        )}
+
         <button
           onClick={onClose}
           style={{
             width: '100%',
             padding: '14px 16px',
-            background: '#334155',
+            background: isNoCombo && reveal.isCorrect ? '#15803D' : '#334155',
             color: '#fff',
             borderRadius: '16px',
             fontWeight: 800,
             fontSize: '1rem',
           }}
         >
-          닫기 (Enter)
+          {isNoCombo && reveal.isCorrect ? '다음 라운드 (Enter)' : '닫기 (Enter)'}
         </button>
       </div>
     </div>
