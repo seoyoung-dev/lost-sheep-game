@@ -51,11 +51,6 @@ function TeamScore({
 }
 
 export default function BellPanel({ scores, buzz, onBuzz, selectedCount, onSubmit }: BellPanelProps) {
-  const buzzLabel = buzz?.team === 'team1' ? '팀 1' : '팀 2'
-  const status = !buzz
-    ? '대기 중'
-    : `${buzzLabel} 벨 입력`
-
   return (
     <section
       style={{
@@ -85,53 +80,23 @@ export default function BellPanel({ scores, buzz, onBuzz, selectedCount, onSubmi
         />
       </div>
 
-      <div
-        style={{
-          borderRadius: '22px',
-          padding: '18px',
-          background: 'linear-gradient(180deg, rgba(248,250,252,0.9), rgba(241,245,249,0.96))',
-          textAlign: 'center',
-        }}
-      >
-        <div style={{ fontSize: '0.92rem', color: '#64748B', fontWeight: 700, marginBottom: '6px' }}>
-          벨 상태
-        </div>
-        <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#334155', marginBottom: '12px' }}>
-          {status}
-        </div>
-        <div
+      {selectedCount === 3 && (
+        <button
+          onClick={onSubmit}
           style={{
-            fontSize: '1rem',
-            lineHeight: 1,
-            fontWeight: 800,
-            color: buzz ? '#F59E0B' : '#94A3B8',
+            width: '100%',
+            padding: '14px',
+            background: '#3B82F6',
+            color: '#fff',
+            borderRadius: '16px',
+            fontWeight: 900,
+            fontSize: '1.05rem',
+            boxShadow: '0 8px 24px rgba(59,130,246,0.4)',
           }}
         >
-          {buzz ? '숫자 1~9 선택 · Enter 제출 · Backspace 취소' : '-'}
-        </div>
-        <div style={{ marginTop: '10px', color: '#64748B', fontSize: '0.85rem' }}>
-          벨 입력 후 카드 3장을 선택해 제출합니다.
-        </div>
-
-        {selectedCount === 3 && (
-          <button
-            onClick={onSubmit}
-            style={{
-              marginTop: '14px',
-              width: '100%',
-              padding: '14px',
-              background: '#3B82F6',
-              color: '#fff',
-              borderRadius: '16px',
-              fontWeight: 900,
-              fontSize: '1.05rem',
-              boxShadow: '0 8px 24px rgba(59,130,246,0.4)',
-            }}
-          >
-            조합 제출 (Enter)
-          </button>
-        )}
-      </div>
+          조합 제출 (Enter)
+        </button>
+      )}
     </section>
   )
 }
