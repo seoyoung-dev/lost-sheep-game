@@ -20,6 +20,8 @@ export type BuzzState =
       team: Team
     }
 
+export type CardCount = 9 | 12
+
 export interface GameState {
   round: number
   cards: SheepCard[]
@@ -30,10 +32,13 @@ export interface GameState {
   foundTrioKeys: string[]
   foundTrios: SheepCard[][]
   teamActionCount: number
+  cardCount: CardCount
 }
 
 export type GameAction =
   | { type: 'next_round' }
+  | { type: 'reset_round' }
+  | { type: 'set_card_count'; count: CardCount }
   | { type: 'buzz'; team: Team }
   | { type: 'buzz_reset' }
   | { type: 'reveal_trios' }
@@ -47,10 +52,8 @@ export type GameAction =
   | { type: 'hide_reveal' }
   | { type: 'adjust_score'; team: Team; amount: number }
 
-const ROUND_SIZE = 9
-
-function getNewRound() {
-  return dealRound(ROUND_SIZE)
+function getNewRound(count: CardCount) {
+  return dealRound(count)
 }
 
 function getTrioKey(cards: SheepCard[]) {
@@ -63,7 +66,7 @@ function getTrioKey(cards: SheepCard[]) {
 export function createInitialGameState(): GameState {
   return {
     round: 1,
-    cards: getNewRound(),
+    cards: getNewRound(9),
     scores: { team1: 0, team2: 0 },
     buzz: null,
     reveal: null,
@@ -71,6 +74,7 @@ export function createInitialGameState(): GameState {
     foundTrioKeys: [],
     foundTrios: [],
     teamActionCount: 0,
+    cardCount: 9,
   }
 }
 
@@ -80,7 +84,30 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         round: state.round + 1,
-        cards: getNewRound(),
+        cards: getNewRound(state.cardCount),
+        buzz: null,
+        reveal: null,
+        selectedPositions: [],
+        foundTrioKeys: [],
+        foundTrios: [],
+      }
+
+    case 'reset_round':
+      return {
+        ...state,
+        cards: getNewRound(state.cardCount),
+        buzz: null,
+        reveal: null,
+        selectedPositions: [],
+        foundTrioKeys: [],
+        foundTrios: [],
+      }
+
+    case 'set_card_count':
+      return {
+        ...state,
+        cardCount: action.count,
+        cards: getNewRound(action.count),
         buzz: null,
         reveal: null,
         selectedPositions: [],
@@ -264,7 +291,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           return {
             ...state,
             round: state.round + 1,
-            cards: getNewRound(),
+            cards: getNewRound(state.cardCount),
             buzz: null,
             reveal: null,
             selectedPositions: [],
@@ -279,7 +306,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return {
           ...state,
           round: state.round + 1,
-          cards: getNewRound(),
+          cards: getNewRound(state.cardCount),
           buzz: null,
           reveal: null,
           selectedPositions: [],
@@ -295,7 +322,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return {
           ...state,
           round: state.round + 1,
-          cards: getNewRound(),
+          cards: getNewRound(state.cardCount),
           buzz: null,
           reveal: null,
           selectedPositions: [],

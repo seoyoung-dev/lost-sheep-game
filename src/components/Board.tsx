@@ -24,7 +24,7 @@ export default function Board({
         width: 'min(100%, calc((100vh - 180px) * 0.9))',
         margin: '0 auto',
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+        gridTemplateColumns: `repeat(${cards.length > 9 ? 4 : 3}, minmax(0, 1fr))`,
         gap: '14px',
       }}
     >

@@ -1,8 +1,9 @@
 import type { Dispatch } from 'react'
-import type { GameAction } from '../state/gameStore'
+import type { CardCount, GameAction } from '../state/gameStore'
 
 interface HostPanelProps {
   dispatch: Dispatch<GameAction>
+  cardCount: CardCount
 }
 
 function ActionButton({
@@ -76,7 +77,7 @@ function ScoreControls({
   )
 }
 
-export default function HostPanel({ dispatch }: HostPanelProps) {
+export default function HostPanel({ dispatch, cardCount }: HostPanelProps) {
   return (
     <section
       style={{
@@ -93,11 +94,25 @@ export default function HostPanel({ dispatch }: HostPanelProps) {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '10px', marginBottom: '16px' }}>
         <ActionButton label="다음 라운드" onClick={() => dispatch({ type: 'next_round' })} />
+        <ActionButton label="라운드 리셋" onClick={() => dispatch({ type: 'reset_round' })} />
         <ActionButton label="선택 초기화" onClick={() => dispatch({ type: 'buzz_reset' })} />
         <ActionButton label="정답 공개" onClick={() => dispatch({ type: 'reveal_trios' })} />
         <ActionButton label="조합 없음 처리" onClick={() => dispatch({ type: 'reveal_no_combo' })} />
         <ActionButton label="개수 힌트" onClick={() => dispatch({ type: 'hint' })} />
         <ActionButton label="카드 힌트" onClick={() => dispatch({ type: 'hint_cards' })} />
+        <button
+          onClick={() => dispatch({ type: 'set_card_count', count: cardCount === 9 ? 12 : 9 })}
+          style={{
+            padding: '14px 16px',
+            background: cardCount === 12 ? '#3B82F6' : '#E5E7EB',
+            color: cardCount === 12 ? '#fff' : '#475569',
+            borderRadius: '16px',
+            fontWeight: 800,
+            border: cardCount === 12 ? '1px solid #2563EB' : '1px solid #D1D5DB',
+          }}
+        >
+          {cardCount === 9 ? '4×3 (12장)' : '3×3 (9장)'}
+        </button>
       </div>
 
       <div style={{ display: 'grid', gap: '12px' }}>

@@ -164,7 +164,7 @@ export default function GameScreen() {
               onSubmit={() => dispatch({ type: 'submit_selection' })}
             />
             <FoundTriosPanel foundTrios={state.foundTrios} cards={state.cards} />
-            <HostPanel dispatch={dispatch} />
+            <HostPanel dispatch={dispatch} cardCount={state.cardCount} />
           </div>
         </div>
       </div>
