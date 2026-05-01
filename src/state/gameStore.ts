@@ -98,7 +98,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         buzz: { team: action.team },
         reveal: null,
         selectedPositions: [],
-        teamActionCount: state.teamActionCount + 1,
       }
 
     case 'buzz_reset':
@@ -184,7 +183,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return {
           ...state,
           selectedPositions: state.selectedPositions.filter(p => p !== action.position),
-          teamActionCount: state.teamActionCount + 1,
         }
       }
 
@@ -196,7 +194,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         selectedPositions: [...state.selectedPositions, action.position],
         reveal: null,
-        teamActionCount: state.teamActionCount + 1,
       }
 
     case 'remove_last_selection':
@@ -207,7 +204,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         selectedPositions: state.selectedPositions.slice(0, -1),
-        teamActionCount: state.teamActionCount + 1,
       }
 
     case 'submit_selection': {
