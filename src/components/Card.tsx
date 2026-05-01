@@ -13,8 +13,6 @@ interface CardProps {
 }
 
 const CARD_RATIO = '53 / 63'
-const SHEEP_SIZE = 304
-const SHEEP_BOTTOM_TRIM = 22
 
 export default function Card({
   card,
@@ -154,8 +152,8 @@ export default function Card({
           left: '50%',
           bottom: 0,
           transform: 'translateX(-50%)',
-          width: '96%',
-          height: `${Math.round(SHEEP_SIZE * 1.18) - SHEEP_BOTTOM_TRIM}px`,
+          width: '92%',
+          height: '88%',
           overflow: 'hidden',
           lineHeight: 0,
           display: 'flex',
@@ -165,9 +163,7 @@ export default function Card({
           zIndex: 2,
         }}
       >
-        <div style={{ transform: `translateY(calc(${SHEEP_BOTTOM_TRIM}px + 2.5%))`, lineHeight: 0 }}>
-          <Sheep color={card.color} mood={card.mood} size={SHEEP_SIZE} />
-        </div>
+        <Sheep color={card.color} mood={card.mood} fill />
       </div>
     </div>
   )

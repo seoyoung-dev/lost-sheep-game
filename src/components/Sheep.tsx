@@ -5,6 +5,7 @@ interface SheepProps {
   color: Color
   mood: Mood
   size?: number
+  fill?: boolean
 }
 
 const COLOR_LABEL: Record<Color, string> = {
@@ -32,35 +33,52 @@ function getImageSrc(color: Color, mood: Mood) {
   return sheepImages[`../assets/sheep/${getFilename(color, mood)}`]
 }
 
-export default function Sheep({ color, mood, size = 140 }: SheepProps) {
+export default function Sheep({ color, mood, size = 140, fill = false }: SheepProps) {
   const src = getImageSrc(color, mood)
   const alt = `${COLOR_LABEL[color]} ${MOOD_LABEL[mood]}`
-  const width = size
-  const height = Math.round(size * 1.18)
 
   if (src) {
+    if (fill) {
+      return (
+        <img
+          src={src}
+          alt={alt}
+          style={{
+            display: 'block',
+            width: '100%',
+            height: 'auto',
+            objectFit: 'contain',
+            objectPosition: 'bottom',
+          }}
+        />
+      )
+    }
+    const w = size
+    const h = Math.round(size * 1.18)
     return (
       <img
         src={src}
         alt={alt}
-        width={width}
-        height={height}
+        width={w}
+        height={h}
         style={{
           display: 'block',
-          width,
-          height,
+          width: w,
+          height: h,
           objectFit: 'contain',
         }}
       />
     )
   }
 
+  const w = size
+  const h = Math.round(size * 1.18)
   return (
     <div
       aria-label={`${alt} 이미지 없음`}
       style={{
-        width,
-        height,
+        width: w,
+        height: h,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
