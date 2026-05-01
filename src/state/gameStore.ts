@@ -305,15 +305,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 }
 
 export function getHighlightedCardIds(reveal: RevealState) {
-  if (!reveal) {
-    return new Set<number>()
+  if (reveal?.mode === 'hintCards') {
+    return new Set(reveal.trios.flat().map(card => card.id))
   }
-
-  if (reveal.selectedCards) {
-    return new Set(reveal.selectedCards.map(card => card.id))
-  }
-
-  return new Set(reveal.trios.flat().map(card => card.id))
+  return new Set<number>()
 }
 
 export const GAME_CONSTANTS = {
