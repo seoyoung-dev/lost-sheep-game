@@ -12,7 +12,7 @@ import {
 } from '../state/gameStore'
 import { playBuzz, playCorrect, playWrong, playHint } from '../utils/sounds'
 
-const TIMEOUT_SECONDS = 5 * 60
+const TIMEOUT_SECONDS = 30
 
 function formatTime(seconds: number) {
   const m = Math.floor(seconds / 60)
@@ -50,6 +50,7 @@ export default function GameScreen() {
   useEffect(() => {
     if (timedOut && !state.reveal) {
       dispatch({ type: 'timeout_reveal' })
+      setTimedOut(false)
     }
   }, [timedOut, state.reveal])
 
