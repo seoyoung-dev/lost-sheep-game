@@ -5,9 +5,6 @@ interface FoundTriosPanelProps {
   cards: SheepCard[]
 }
 
-const COLOR_LABEL: Record<string, string> = { white: '흰', black: '검', brown: '갈' }
-const MOOD_LABEL: Record<string, string> = { happy: '😊', crying: '😢', asleep: '😴' }
-const PLACE_LABEL: Record<string, string> = { field: '들', mountain: '산', river: '강' }
 const COLOR_DOT: Record<string, string> = {
   white: '#E5E7EB',
   black: '#374151',
@@ -19,40 +16,6 @@ function cardPosition(cards: SheepCard[], card: SheepCard) {
   return idx >= 0 ? idx + 1 : '?'
 }
 
-function AttrBadge({ label, same }: { label: string; same: boolean }) {
-  return (
-    <span
-      style={{
-        fontSize: '0.7rem',
-        fontWeight: 700,
-        padding: '2px 6px',
-        borderRadius: '6px',
-        background: same ? 'rgba(99,102,241,0.12)' : 'rgba(234,88,12,0.10)',
-        color: same ? '#4338CA' : '#C2410C',
-      }}
-    >
-      {label}
-    </span>
-  )
-}
-
-function trioAttrSummary(trio: SheepCard[]) {
-  const attrs = ['color', 'mood', 'place'] as const
-  return attrs.map(attr => {
-    const vals = trio.map(c => c[attr])
-    const allSame = vals[0] === vals[1] && vals[1] === vals[2]
-    if (attr === 'color') {
-      const label = allSame ? COLOR_LABEL[vals[0]] + ' 같음' : '색 다름'
-      return <AttrBadge key={attr} label={label} same={allSame} />
-    }
-    if (attr === 'mood') {
-      const label = allSame ? MOOD_LABEL[vals[0]] + ' 같음' : '기분 다름'
-      return <AttrBadge key={attr} label={label} same={allSame} />
-    }
-    const label = allSame ? PLACE_LABEL[vals[0]] + ' 같음' : '장소 다름'
-    return <AttrBadge key={attr} label={label} same={allSame} />
-  })
-}
 
 export default function FoundTriosPanel({ foundTrios, cards }: FoundTriosPanelProps) {
   return (
@@ -123,10 +86,6 @@ export default function FoundTriosPanel({ foundTrios, cards }: FoundTriosPanelPr
                 </div>
               </div>
 
-              {/* 속성 요약 */}
-              <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                {trioAttrSummary(trio)}
-              </div>
             </div>
           ))}
         </div>
