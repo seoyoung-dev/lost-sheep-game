@@ -354,6 +354,3 @@ export function getHighlightedCardIds(reveal: RevealState) {
   return new Set<number>()
 }
 
-export const GAME_CONSTANTS = {
-  ROUND_SIZE,
-}
