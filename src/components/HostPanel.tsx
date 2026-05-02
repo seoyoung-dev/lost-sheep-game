@@ -4,6 +4,7 @@ import type { CardCount, GameAction } from '../state/gameStore'
 interface HostPanelProps {
   dispatch: Dispatch<GameAction>
   cardCount: CardCount
+  teamNames: { team1: string; team2: string }
 }
 
 function ActionButton({
@@ -77,7 +78,7 @@ function ScoreControls({
   )
 }
 
-export default function HostPanel({ dispatch, cardCount }: HostPanelProps) {
+export default function HostPanel({ dispatch, cardCount, teamNames }: HostPanelProps) {
   return (
     <section
       style={{
@@ -116,8 +117,8 @@ export default function HostPanel({ dispatch, cardCount }: HostPanelProps) {
       </div>
 
       <div style={{ display: 'grid', gap: '12px' }}>
-        <ScoreControls team="team1" title="팀 1 점수 조정" dispatch={dispatch} />
-        <ScoreControls team="team2" title="팀 2 점수 조정" dispatch={dispatch} />
+        <ScoreControls team="team1" title={`${teamNames.team1} 점수 조정`} dispatch={dispatch} />
+        <ScoreControls team="team2" title={`${teamNames.team2} 점수 조정`} dispatch={dispatch} />
       </div>
     </section>
   )

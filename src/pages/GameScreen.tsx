@@ -152,6 +152,7 @@ export default function GameScreen() {
           <div style={{ display: 'grid', gap: '14px', alignContent: 'start', overflowY: 'auto', maxHeight: 'calc(100vh - 92px)' }}>
             <BellPanel
               scores={state.scores}
+              teamNames={state.teamNames}
               buzz={state.buzz}
               onBuzz={team => {
                 if (state.buzz?.team === team) {
@@ -162,9 +163,10 @@ export default function GameScreen() {
               }}
               selectedCount={state.selectedPositions.length}
               onSubmit={() => dispatch({ type: 'submit_selection' })}
+              dispatch={dispatch}
             />
             <FoundTriosPanel foundTrios={state.foundTrios} cards={state.cards} />
-            <HostPanel dispatch={dispatch} cardCount={state.cardCount} />
+            <HostPanel dispatch={dispatch} cardCount={state.cardCount} teamNames={state.teamNames} />
           </div>
         </div>
       </div>

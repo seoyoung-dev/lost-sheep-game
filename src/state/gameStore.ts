@@ -26,6 +26,7 @@ export interface GameState {
   round: number
   cards: SheepCard[]
   scores: { team1: number; team2: number }
+  teamNames: { team1: string; team2: string }
   buzz: BuzzState
   reveal: RevealState
   selectedPositions: number[]
@@ -51,6 +52,7 @@ export type GameAction =
   | { type: 'submit_selection' }
   | { type: 'hide_reveal' }
   | { type: 'adjust_score'; team: Team; amount: number }
+  | { type: 'set_team_name'; team: Team; name: string }
 
 function getNewRound(count: CardCount) {
   return dealRound(count)
@@ -68,6 +70,7 @@ export function createInitialGameState(): GameState {
     round: 1,
     cards: getNewRound(9),
     scores: { team1: 0, team2: 0 },
+    teamNames: { team1: '팀 1', team2: '팀 2' },
     buzz: null,
     reveal: null,
     selectedPositions: [],
@@ -339,6 +342,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         scores: {
           ...state.scores,
           [action.team]: state.scores[action.team] + action.amount,
+        },
+      }
+
+    case 'set_team_name':
+      return {
+        ...state,
+        teamNames: {
+          ...state.teamNames,
+          [action.team]: action.name.trim() || state.teamNames[action.team],
         },
       }
 
