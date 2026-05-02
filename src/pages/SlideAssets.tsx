@@ -1,5 +1,6 @@
 import Background from '../components/Background'
 import Sheep from '../components/Sheep'
+import Card from '../components/Card'
 import type { SheepCard } from '../game/types'
 
 type Place = 'field' | 'mountain' | 'river'
@@ -25,6 +26,67 @@ const places: Place[] = ['field', 'mountain', 'river']
 const COLOR_LABELS: Record<string, string> = { white: '흰 양', black: '검은 양', brown: '갈색 양' }
 const MOOD_LABELS:  Record<string, string> = { happy: '웃음', crying: '울음', asleep: '잠듦' }
 const PLACE_LABELS: Record<Place, string>  = { field: '들판', mountain: '산', river: '강가' }
+
+interface ComboExample {
+  cards: SheepCard[]
+  correct: boolean
+  analysis: { attr: string; values: string[]; ok: boolean; reason: string }[]
+}
+
+const comboExamples: ComboExample[] = [
+  {
+    cards: [
+      makeCard(10, 'white', 'happy',  'field'),
+      makeCard(11, 'black', 'crying', 'mountain'),
+      makeCard(12, 'brown', 'asleep', 'river'),
+    ],
+    correct: true,
+    analysis: [
+      { attr: '색깔', values: ['흰', '검은', '갈색'],   ok: true,  reason: '전부 다름' },
+      { attr: '표정', values: ['웃음', '울음', '잠듦'], ok: true,  reason: '전부 다름' },
+      { attr: '장소', values: ['들판', '산', '강가'],   ok: true,  reason: '전부 다름' },
+    ],
+  },
+  {
+    cards: [
+      makeCard(13, 'white', 'happy',  'field'),
+      makeCard(14, 'white', 'crying', 'mountain'),
+      makeCard(15, 'white', 'asleep', 'river'),
+    ],
+    correct: true,
+    analysis: [
+      { attr: '색깔', values: ['흰', '흰', '흰'],       ok: true,  reason: '전부 같음' },
+      { attr: '표정', values: ['웃음', '울음', '잠듦'], ok: true,  reason: '전부 다름' },
+      { attr: '장소', values: ['들판', '산', '강가'],   ok: true,  reason: '전부 다름' },
+    ],
+  },
+  {
+    cards: [
+      makeCard(16, 'white', 'happy', 'field'),
+      makeCard(17, 'black', 'happy', 'mountain'),
+      makeCard(18, 'brown', 'crying', 'river'),
+    ],
+    correct: false,
+    analysis: [
+      { attr: '색깔', values: ['흰', '검은', '갈색'],   ok: true,  reason: '전부 다름' },
+      { attr: '표정', values: ['웃음', '웃음', '울음'], ok: false, reason: '2개 같고 1개 다름' },
+      { attr: '장소', values: ['들판', '산', '강가'],   ok: true,  reason: '전부 다름' },
+    ],
+  },
+  {
+    cards: [
+      makeCard(19, 'white', 'happy',  'field'),
+      makeCard(20, 'black', 'crying', 'field'),
+      makeCard(21, 'brown', 'asleep', 'river'),
+    ],
+    correct: false,
+    analysis: [
+      { attr: '색깔', values: ['흰', '검은', '갈색'],   ok: true,  reason: '전부 다름' },
+      { attr: '표정', values: ['웃음', '울음', '잠듦'], ok: true,  reason: '전부 다름' },
+      { attr: '장소', values: ['들판', '들판', '강가'], ok: false, reason: '2개 같고 1개 다름' },
+    ],
+  },
+]
 
 const LABEL_PILL = {
   fontSize: '1.15rem',
@@ -108,6 +170,72 @@ function CardSection({
   )
 }
 
+function ExamplesSection() {
+  return (
+    <div style={SECTION_WRAP}>
+      <SectionHeader emoji="🎯" title="조합 예시" />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        {comboExamples.map((ex, i) => {
+          const bg     = ex.correct ? 'rgba(220,252,231,0.7)' : 'rgba(254,226,226,0.7)'
+          const border = ex.correct ? '2px solid rgba(21,128,61,0.25)' : '2px solid rgba(185,28,28,0.2)'
+          const color  = ex.correct ? '#15803D' : '#B91C1C'
+          const label  = ex.correct ? '✅ 정답 조합' : '❌ 실패 조합'
+
+          return (
+            <div
+              key={i}
+              style={{
+                borderRadius: '20px',
+                background: bg,
+                border,
+                padding: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+              }}
+            >
+              <div style={{ fontSize: '1.1rem', fontWeight: 900, color }}>{label}</div>
+
+              {/* 카드 3장 */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '10px' }}>
+                {ex.cards.map(card => (
+                  <Card key={card.id} card={card} number={undefined} />
+                ))}
+              </div>
+
+              {/* 속성 분석 */}
+              <div style={{ display: 'grid', gap: '6px' }}>
+                {ex.analysis.map(row => (
+                  <div
+                    key={row.attr}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      fontSize: '0.88rem',
+                      fontWeight: 700,
+                      color: row.ok ? '#334155' : '#B91C1C',
+                      background: row.ok ? 'rgba(255,255,255,0.5)' : 'rgba(254,202,202,0.5)',
+                      borderRadius: '10px',
+                      padding: '6px 12px',
+                    }}
+                  >
+                    <span style={{ opacity: 0.6, minWidth: '28px' }}>{row.attr}</span>
+                    <span>{row.values.join(' · ')}</span>
+                    <span style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                      {row.ok ? '✅' : '❌'} {row.reason}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 function PlaceSection() {
   return (
     <div style={SECTION_WRAP}>
@@ -173,6 +301,7 @@ export default function SlideAssets() {
             labels={moodCards.map(c => MOOD_LABELS[c.mood])}
           />
           <PlaceSection />
+          <ExamplesSection />
         </div>
 
         <div
