@@ -21,7 +21,9 @@ export default function Board({
   return (
     <div
       style={{
-        width: 'min(100%, calc((100vh - 180px) * 0.9))',
+        width: cards.length > 9
+          ? 'min(100%, calc((100vh - 180px) * 1.2))'
+          : 'min(100%, calc((100vh - 180px) * 0.9))',
         margin: '0 auto',
         display: 'grid',
         gridTemplateColumns: `repeat(${cards.length > 9 ? 4 : 3}, minmax(0, 1fr))`,
