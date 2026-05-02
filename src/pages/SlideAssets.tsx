@@ -174,7 +174,7 @@ function ExamplesSection() {
   return (
     <div style={SECTION_WRAP}>
       <SectionHeader emoji="🎯" title="조합 예시" />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
         {comboExamples.map((ex, i) => {
           const bg     = ex.correct ? 'rgba(220,252,231,0.7)' : 'rgba(254,226,226,0.7)'
           const border = ex.correct ? '2px solid rgba(21,128,61,0.25)' : '2px solid rgba(185,28,28,0.2)'
@@ -188,45 +188,47 @@ function ExamplesSection() {
                 borderRadius: '20px',
                 background: bg,
                 border,
-                padding: '20px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px',
+                padding: '24px 28px',
+                display: 'grid',
+                gridTemplateColumns: 'auto 1fr',
+                gap: '28px',
+                alignItems: 'center',
               }}
             >
-              <div style={{ fontSize: '1.1rem', fontWeight: 900, color }}>{label}</div>
-
               {/* 카드 3장 */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '10px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 160px)', gap: '14px' }}>
                 {ex.cards.map(card => (
                   <Card key={card.id} card={card} number={undefined} />
                 ))}
               </div>
 
-              {/* 속성 분석 */}
-              <div style={{ display: 'grid', gap: '6px' }}>
-                {ex.analysis.map(row => (
-                  <div
-                    key={row.attr}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      fontSize: '0.88rem',
-                      fontWeight: 700,
-                      color: row.ok ? '#334155' : '#B91C1C',
-                      background: row.ok ? 'rgba(255,255,255,0.5)' : 'rgba(254,202,202,0.5)',
-                      borderRadius: '10px',
-                      padding: '6px 12px',
-                    }}
-                  >
-                    <span style={{ opacity: 0.6, minWidth: '28px' }}>{row.attr}</span>
-                    <span>{row.values.join(' · ')}</span>
-                    <span style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
-                      {row.ok ? '✅' : '❌'} {row.reason}
-                    </span>
-                  </div>
-                ))}
+              {/* 판정 + 속성 분석 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ fontSize: '1.4rem', fontWeight: 900, color }}>{label}</div>
+                <div style={{ display: 'grid', gap: '8px' }}>
+                  {ex.analysis.map(row => (
+                    <div
+                      key={row.attr}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        fontSize: '1rem',
+                        fontWeight: 700,
+                        color: row.ok ? '#334155' : '#B91C1C',
+                        background: row.ok ? 'rgba(255,255,255,0.5)' : 'rgba(254,202,202,0.5)',
+                        borderRadius: '12px',
+                        padding: '9px 16px',
+                      }}
+                    >
+                      <span style={{ opacity: 0.55, minWidth: '32px' }}>{row.attr}</span>
+                      <span>{row.values.join(' · ')}</span>
+                      <span style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                        {row.ok ? '✅' : '❌'} {row.reason}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )
