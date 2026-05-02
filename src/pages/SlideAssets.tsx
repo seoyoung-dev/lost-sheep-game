@@ -176,18 +176,16 @@ function ExamplesSection() {
       <SectionHeader emoji="🎯" title="조합 예시" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
         {comboExamples.map((ex, i) => {
-          const bg     = ex.correct ? 'rgba(220,252,231,0.7)' : 'rgba(254,226,226,0.7)'
-          const border = ex.correct ? '2px solid rgba(21,128,61,0.25)' : '2px solid rgba(185,28,28,0.2)'
-          const color  = ex.correct ? '#15803D' : '#B91C1C'
-          const label  = ex.correct ? '✅ 정답 조합' : '❌ 실패 조합'
+          const color = ex.correct ? '#15803D' : '#B91C1C'
+          const label = ex.correct ? '✅ 정답 조합' : '❌ 실패 조합'
 
           return (
             <div
               key={i}
               style={{
                 borderRadius: '20px',
-                background: bg,
-                border,
+                background: 'rgba(255,255,255,0.7)',
+                border: '2px solid rgba(255,255,255,0.9)',
                 padding: '24px 28px',
                 display: 'grid',
                 gridTemplateColumns: 'auto 1fr',
@@ -196,7 +194,7 @@ function ExamplesSection() {
               }}
             >
               {/* 카드 3장 */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 160px)', gap: '14px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 220px)', gap: '14px' }}>
                 {ex.cards.map(card => (
                   <Card key={card.id} card={card} number={undefined} />
                 ))}
