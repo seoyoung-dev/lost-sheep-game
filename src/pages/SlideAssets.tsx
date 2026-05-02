@@ -1,16 +1,8 @@
+import Card from '../components/Card'
 import Background from '../components/Background'
 import type { SheepCard } from '../game/types'
 
 type Place = 'field' | 'mountain' | 'river'
-
-const sheepImages = import.meta.glob('../assets/sheep/*.png', {
-  eager: true,
-  import: 'default',
-}) as Record<string, string>
-
-function getSrc(color: SheepCard['color'], mood: SheepCard['mood']) {
-  return sheepImages[`../assets/sheep/sheep-${color}-${mood}.png`]
-}
 
 function makeCard(id: number, color: SheepCard['color'], mood: SheepCard['mood'], place: SheepCard['place']): SheepCard {
   return { id, color, mood, place }
@@ -23,16 +15,28 @@ const colorCards: SheepCard[] = [
 ]
 
 const moodCards: SheepCard[] = [
-  makeCard(4, 'white', 'happy', 'field'),
-  makeCard(5, 'white', 'crying', 'field'),
-  makeCard(6, 'white', 'asleep', 'field'),
+  makeCard(4, 'white', 'happy', 'mountain'),
+  makeCard(5, 'white', 'crying', 'mountain'),
+  makeCard(6, 'white', 'asleep', 'mountain'),
 ]
 
 const places: Place[] = ['field', 'mountain', 'river']
 
-const COLOR_LABELS: Record<string, string> = { white: '흰 양', black: '검은 양', brown: '갈색 양' }
-const MOOD_LABELS:  Record<string, string> = { happy: '웃음', crying: '울음', asleep: '잠듦' }
-const PLACE_LABELS: Record<Place, string>  = { field: '들판', mountain: '산', river: '강가' }
+const COLOR_LABELS: Record<string, string> = {
+  white: '흰 양',
+  black: '검은 양',
+  brown: '갈색 양',
+}
+const MOOD_LABELS: Record<string, string> = {
+  happy: '웃음',
+  crying: '울음',
+  asleep: '잠듦',
+}
+const PLACE_LABELS: Record<Place, string> = {
+  field: '들판',
+  mountain: '산',
+  river: '강가',
+}
 
 const LABEL_PILL = {
   fontSize: '1.15rem',
@@ -51,15 +55,6 @@ const SECTION_WRAP = {
   boxShadow: '0 20px 48px rgba(148,163,184,0.15)',
 } as const
 
-const FRAME = {
-  width: '100%',
-  overflow: 'hidden',
-  borderRadius: '18px',
-  border: '3px solid rgba(255,255,255,0.96)',
-  boxShadow: '0 10px 24px rgba(15,23,42,0.10)',
-  background: 'rgba(248,250,252,0.95)',
-} as const
-
 function SectionHeader({ emoji, title }: { emoji: string; title: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
@@ -74,69 +69,27 @@ function SectionHeader({ emoji, title }: { emoji: string; title: string }) {
   )
 }
 
-// 색깔 섹션: 털 영역(상단 14~42%)만 보여줌 — 얼굴 없음
-function WoolCard({ card }: { card: SheepCard }) {
-  const src = getSrc(card.color, card.mood)
-  return (
-    <div style={{ ...FRAME, aspectRatio: '4 / 2' }}>
-      <img
-        src={src}
-        alt={COLOR_LABELS[card.color]}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center 22%',
-        }}
-      />
-    </div>
-  )
-}
-
-// 표정 섹션: 얼굴 영역(38~68%)만 보여줌
-function FaceCard({ card }: { card: SheepCard }) {
-  const src = getSrc(card.color, card.mood)
-  return (
-    <div style={{ ...FRAME, aspectRatio: '1 / 1' }}>
-      <img
-        src={src}
-        alt={MOOD_LABELS[card.mood]}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center 53%',
-        }}
-      />
-    </div>
-  )
-}
-
-function ColorSection() {
+function CardSection({
+  emoji,
+  title,
+  cards,
+  labels,
+}: {
+  emoji: string
+  title: string
+  cards: SheepCard[]
+  labels: string[]
+}) {
   return (
     <div style={SECTION_WRAP}>
-      <SectionHeader emoji="🐑" title="색깔" />
+      <SectionHeader emoji={emoji} title={title} />
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '20px' }}>
-        {colorCards.map((card, i) => (
+        {cards.map((card, i) => (
           <div key={card.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
-            <WoolCard card={card} />
-            <div style={LABEL_PILL}>{COLOR_LABELS[colorCards[i].color]}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function MoodSection() {
-  return (
-    <div style={SECTION_WRAP}>
-      <SectionHeader emoji="😊" title="표정" />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '20px' }}>
-        {moodCards.map((card, i) => (
-          <div key={card.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
-            <FaceCard card={card} />
-            <div style={LABEL_PILL}>{MOOD_LABELS[moodCards[i].mood]}</div>
+            <div style={{ width: '100%' }}>
+              <Card card={card} number={undefined} />
+            </div>
+            <div style={LABEL_PILL}>{labels[i]}</div>
           </div>
         ))}
       </div>
@@ -153,9 +106,13 @@ function PlaceSection() {
           <div key={place} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
             <div
               style={{
-                ...FRAME,
+                width: '100%',
                 aspectRatio: '53 / 63',
                 position: 'relative',
+                borderRadius: '18px',
+                overflow: 'hidden',
+                border: '3px solid rgba(255,255,255,0.96)',
+                boxShadow: '0 10px 24px rgba(15,23,42,0.12)',
               }}
             >
               <Background place={place} />
@@ -192,8 +149,18 @@ export default function SlideAssets() {
         </div>
 
         <div style={{ display: 'grid', gap: '24px' }}>
-          <ColorSection />
-          <MoodSection />
+          <CardSection
+            emoji="🐑"
+            title="색깔"
+            cards={colorCards}
+            labels={colorCards.map(c => COLOR_LABELS[c.color])}
+          />
+          <CardSection
+            emoji="😊"
+            title="표정"
+            cards={moodCards}
+            labels={moodCards.map(c => MOOD_LABELS[c.mood])}
+          />
           <PlaceSection />
         </div>
 
