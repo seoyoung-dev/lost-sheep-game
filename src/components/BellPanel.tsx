@@ -13,7 +13,6 @@ interface BellPanelProps {
 }
 
 function TeamScore({
-  team,
   name,
   hotkey,
   score,
@@ -22,7 +21,6 @@ function TeamScore({
   onClick,
   onNameChange,
 }: {
-  team: Team
   name: string
   hotkey: string
   score: number
@@ -137,7 +135,6 @@ export default function BellPanel({ scores, teamNames, buzz, onBuzz, selectedCou
     >
       <div style={{ display: 'flex', gap: '14px', marginBottom: '18px' }}>
         <TeamScore
-          team="team1"
           name={teamNames.team1}
           hotkey="A"
           score={scores.team1}
@@ -147,7 +144,6 @@ export default function BellPanel({ scores, teamNames, buzz, onBuzz, selectedCou
           onNameChange={name => dispatch({ type: 'set_team_name', team: 'team1', name })}
         />
         <TeamScore
-          team="team2"
           name={teamNames.team2}
           hotkey="L"
           score={scores.team2}
